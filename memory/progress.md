@@ -7,7 +7,7 @@
 - [x] SwiftUI 菜单、提交、设置和通知。
 - [x] 服务测试、Debug / Release 构建与启动验证。
 - [x] README、开发日志、交付记录。
-- [ ] Git 提交和推送：已检测到 `origin/main`，待完成验证。
+- [x] Git 提交和推送：`14949e5 feat: add FinderGitHelper menu bar app` 已推送至 `origin/main`。
 
 ## 验证进展
 

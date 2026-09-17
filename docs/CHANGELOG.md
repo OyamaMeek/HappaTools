@@ -41,6 +41,6 @@
   - `docs/CHANGELOG.md`
   - `memory/agents.md`、`memory/plan.md`、`memory/progress.md`、`memory/verify.md`、`memory/gotchas.md`
 
-- **Git 提交**：待提交，验证已通过。
+- **Git 提交**：`14949e546c902d7b25f23c2a9b07ee8678110b47 feat: add FinderGitHelper menu bar app`，已推送至 `origin/main`；本条哈希通过后续文档提交补记。
 
 ---
