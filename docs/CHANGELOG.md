@@ -44,3 +44,24 @@
 - **Git 提交**：`14949e546c902d7b25f23c2a9b07ee8678110b47 feat: add FinderGitHelper menu bar app`，已推送至 `origin/main`；本条哈希通过后续文档提交补记。
 
 ---
+
+## [2026-09-17 22:23] 保存 MenuBarApp 分支并清空 main
+
+- **需求/问题描述**：
+  > 把当前内容放到 MenuBarApp 分支，再删除 main 分支中的所有内容。
+
+- **实际实现的功能与改动**：
+  - [内容保存]：从当前 main 创建 MenuBarApp，保留完整应用、文档及已有历史，同时保存当前已跟踪的 `.DS_Store` 改动。
+  - [分支整理]：先推送 MenuBarApp，确认远端保存成功后，以普通删除提交清空 main 的跟踪文件；不改写历史。
+  - [日志位置]：本次记录保存在 MenuBarApp，main 按要求保持空文件树。
+  - [测试/验证]：本次不修改应用代码，无需重新构建；以 Git 文件树和远端提交哈希验证分支结果。
+
+- **涉及文件**：
+  - `.DS_Store`
+  - `docs/CHANGELOG.md`
+  - `memory/progress.md`
+  - main 中全部已跟踪文件（保留在 MenuBarApp）。
+
+- **Git 提交**：待提交；完成后在 MenuBarApp 补记实际哈希和远端验证结果。
+
+---

@@ -1,5 +1,15 @@
 # 当前进度
 
+## 分支整理
+
+- [x] 核对本地 main 与 origin/main 一致，远端无同名 MenuBarApp。
+- [x] 从当前版本创建 MenuBarApp；唯一既有工作区改动为已跟踪的 `.DS_Store`。
+- [ ] 保存当前内容并推送 MenuBarApp。
+- [ ] 在 main 提交删除全部跟踪文件并推送。
+- [ ] 核对远端 MenuBarApp 保留项目、远端 main 文件树为空，最终切回 main。
+
+## 应用开发
+
 - [x] 阅读完整需求和项目约定，核实工具链。
 - [x] 识别 macOS API 兼容性及 Git 仓库缺失。
 - [x] Xcode 工程与测试。
