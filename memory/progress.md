@@ -4,9 +4,9 @@
 
 - [x] 核对本地 main 与 origin/main 一致，远端无同名 MenuBarApp。
 - [x] 从当前版本创建 MenuBarApp；唯一既有工作区改动为已跟踪的 `.DS_Store`。
-- [ ] 保存当前内容并推送 MenuBarApp。
-- [ ] 在 main 提交删除全部跟踪文件并推送。
-- [ ] 核对远端 MenuBarApp 保留项目、远端 main 文件树为空，最终切回 main。
+- [x] 保存当前内容并推送 MenuBarApp：`274aff6`，保留 46 个跟踪文件。
+- [x] 在 main 提交删除全部跟踪文件并推送：`80fd53e`，文件树为空。
+- [x] 核对两个远端提交哈希与本地一致；日志补记推送后切回 main。
 
 ## 应用开发
 

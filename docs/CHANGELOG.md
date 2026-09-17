@@ -54,7 +54,7 @@
   - [内容保存]：从当前 main 创建 MenuBarApp，保留完整应用、文档及已有历史，同时保存当前已跟踪的 `.DS_Store` 改动。
   - [分支整理]：先推送 MenuBarApp，确认远端保存成功后，以普通删除提交清空 main 的跟踪文件；不改写历史。
   - [日志位置]：本次记录保存在 MenuBarApp，main 按要求保持空文件树。
-  - [测试/验证]：本次不修改应用代码，无需重新构建；以 Git 文件树和远端提交哈希验证分支结果。
+  - [测试/验证]：MenuBarApp 保留 46 个跟踪文件，main 的提交文件树为空；两个远端提交哈希均与本地一致。本次未修改应用代码，无需重新构建。
 
 - **涉及文件**：
   - `.DS_Store`
@@ -62,6 +62,6 @@
   - `memory/progress.md`
   - main 中全部已跟踪文件（保留在 MenuBarApp）。
 
-- **Git 提交**：待提交；完成后在 MenuBarApp 补记实际哈希和远端验证结果。
+- **Git 提交**：`274aff65bef73dc6cdb8131c2c2324e4dacee89d chore: preserve current project on MenuBarApp`；`80fd53ead89c702f3f10a90f8bed5a61f8298842 chore: clear main after preserving MenuBarApp`。均已推送至对应远端分支。
 
 ---
