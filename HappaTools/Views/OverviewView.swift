@@ -12,7 +12,7 @@ struct OverviewView: View {
                     .font(.title3).foregroundColor(.secondary)
                 Divider()
                 Label(model.extensionEnabled ? "Git 扩展已启用" : "Git 扩展尚未启用", systemImage: model.extensionEnabled ? "checkmark.circle.fill" : "exclamationmark.circle")
-                Text("在系统设置 → 通用 → 登录项与扩展 → 文件提供程序中启用 HappaTools 和 HappaTools README，再通过 Finder → 显示 → 自定工具栏添加两个按钮。README 状态请在系统设置中单独确认。")
+                Text("在系统设置 → 通用 → 登录项与扩展 → 文件提供程序中启用 HappaTools，再通过 Finder → 显示 → 自定工具栏添加 Git 按钮。“创建空白 README.md”位于“提交并推送”下方。如需独立 README 按钮，可另外启用 HappaTools README 扩展。")
                     .foregroundColor(.secondary)
                 Button("管理 Finder 扩展") { FIFinderSyncController.showExtensionManagementInterface() }
                 Divider()

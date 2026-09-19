@@ -99,6 +99,29 @@
   - `Tests/PromptSmoke/main.swift`
   - `docs/CHANGELOG.md`
 
-- **Git 提交**：待记录 `fix: select default commit date for replacement`
+- **Git 提交**：`fd081cc fix: select default commit date for replacement`
+
+---
+
+## [2026-09-19 19:57] 修复 Finder README 菜单入口
+
+- **需求/问题描述**：
+  > README 功能不显示，需要放到“提交并推送”下方。
+
+- **实际实现的功能与改动**：
+  - [菜单入口]：Git 工具栏菜单同时提供提交和创建 README，保留可选独立 README 扩展。
+  - [操作分派]：两个菜单项使用独立 selector，按实际操作检查开关；忙碌时统一禁用，无目标路径时允许选择文件夹。
+  - [使用引导]：概览和首次启动引导改为只需启用 HappaTools 即可使用两项功能。
+  - [测试/验证]：菜单 32 种状态检查通过；实机 Finder 显示两项操作，并成功在临时目录创建 0 字节 README.md；共享测试最终 23/23 通过，Debug/Release 构建与签名验证通过。
+
+- **涉及文件**：
+  - `FinderSyncExtension/FinderSync.swift` (+11 / -6)
+  - `FinderSyncExtension/MenuBuilder.swift` (+15 / -11)
+  - `HappaTools/Views/ContentView.swift` (+2 / -2)
+  - `HappaTools/Views/OverviewView.swift` (+1 / -1)
+  - `Tests/MenuSmoke/main.swift` (+24 / -13)
+  - `docs/CHANGELOG.md`
+
+- **Git 提交**：待记录 `fix: expose README creation in Git toolbar menu`
 
 ---

@@ -40,8 +40,8 @@ struct ContentView: View {
         .sheet(isPresented: $model.showOnboarding) {
             VStack(alignment: .leading, spacing: 18) {
                 Text("让 Finder 准备就绪").font(.title2).bold()
-                Text("1. 在系统设置的文件提供程序中启用 HappaTools 和 HappaTools README。")
-                Text("2. 在 Finder 的“自定工具栏”中拖入 Git 和 README 按钮。")
+                Text("1. 在系统设置的文件提供程序中启用 HappaTools。")
+                Text("2. 在 Finder 的“自定工具栏”中拖入 Git 按钮，菜单提供提交与创建 README 两项操作。")
                 Text("3. 如需处理受保护目录，请为 HappaTools 授予完整磁盘访问权限。Git 和文件操作由主应用执行。")
                 Text("Git 操作会暂存当前仓库的全部更改，提交后推送到当前分支配置的上游。请预先配置身份、远端和免交互认证。")
                     .foregroundColor(.secondary)

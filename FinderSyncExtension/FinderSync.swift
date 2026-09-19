@@ -41,7 +41,7 @@ final class FinderSync: FIFinderSync {
     }
 
     override var toolbarItemName: String { isGit ? "Git" : "README" }
-    override var toolbarItemToolTip: String { isGit ? "提交并推送当前仓库" : "创建空白 README.md" }
+    override var toolbarItemToolTip: String { isGit ? "提交并推送，或创建空白 README.md" : "创建空白 README.md" }
     override var toolbarItemImage: NSImage {
         let image = NSImage(systemSymbolName: isGit ? "arrow.triangle.branch" : "doc.badge.plus", accessibilityDescription: toolbarItemName) ?? NSImage(named: NSImage.actionTemplateName)!
         image.isTemplate = true
@@ -52,8 +52,9 @@ final class FinderSync: FIFinderSync {
         guard menuKind == .toolbarItemMenu else { return nil }
         let settings = UserSettings()
         return MenuBuilder.make(directory: currentDirectory(), isGit: isGit,
-                                enabled: isGit ? settings.showGitButton : settings.showReadmeButton,
-                                busy: operationIsRunning || isOpening, target: self, action: #selector(runOperation(_:)))
+                                gitEnabled: settings.showGitButton, readmeEnabled: settings.showReadmeButton,
+                                busy: operationIsRunning || isOpening, target: self,
+                                gitAction: #selector(runGitOperation(_:)), readmeAction: #selector(runReadmeOperation(_:)))
     }
 
     private func currentDirectory() -> URL? {
@@ -61,11 +62,15 @@ final class FinderSync: FIFinderSync {
         return target?.isFileURL == true ? target : nil
     }
 
-    @objc private func runOperation(_ sender: NSMenuItem) {
+    @objc private func runGitOperation(_ sender: NSMenuItem) { runOperation(.git) }
+
+    @objc private func runReadmeOperation(_ sender: NSMenuItem) { runOperation(.readme) }
+
+    private func runOperation(_ operation: FinderRequest.Operation) {
         let settings = UserSettings()
         guard !isOpening, !operationIsRunning else { return }
-        guard isGit ? settings.showGitButton : settings.showReadmeButton else { return }
-        let request = FinderRequest(operation: isGit ? .git : .readme, directory: currentDirectory())
+        guard operation == .git ? settings.showGitButton : settings.showReadmeButton else { return }
+        let request = FinderRequest(operation: operation, directory: currentDirectory())
         isOpening = true
         NSWorkspace.shared.open([request.url], withApplicationAt: containingAppURL, configuration: NSWorkspace.OpenConfiguration()) { [weak self] _, error in
             DispatchQueue.main.async {
