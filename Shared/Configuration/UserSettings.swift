@@ -6,6 +6,7 @@ public final class UserSettings {
         static let gitExecutablePath = "happatools.gitPath"
         static let showGitButton = "happatools.showGitButton"
         static let showReadmeButton = "happatools.showReadmeButton"
+        static let hideFromDock = "happatools.hideFromDock"
         static let onboardingCompleted = "happatools.onboardingCompleted"
         static let operationInProgress = "happatools.operationInProgress"
     }
@@ -45,6 +46,11 @@ public final class UserSettings {
     public var onboardingCompleted: Bool {
         get { bool(forKey: Key.onboardingCompleted, default: false) }
         set { store(newValue, forKey: Key.onboardingCompleted) }
+    }
+
+    public var hideFromDock: Bool {
+        get { bool(forKey: Key.hideFromDock, default: false) }
+        set { store(newValue, forKey: Key.hideFromDock) }
     }
 
     public var operationInProgress: Bool {

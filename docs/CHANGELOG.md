@@ -63,3 +63,24 @@
 - **Git 提交**：`9df415c docs: add session handoff`
 
 ---
+
+## [2026-09-19 19:57] 增加 Dock 图标隐藏开关
+
+- **需求/问题描述**：
+  > 增加一个在 Dock 栏不显示应用的开关。
+
+- **实际实现的功能与改动**：
+  - [设置]：新增“在 Dock 中隐藏应用”，默认关闭；保存后立即切换应用显示策略，启动时恢复持久化偏好。
+  - [恢复入口]：设置页提示可从“应用程序”重新打开 HappaTools 调整偏好。
+  - [测试/验证]：设置持久化测试通过；Debug、Release 构建通过；实机确认 accessory → 关闭窗口 → 从应用程序重新打开 → regular 恢复成功，测试后恢复原显示偏好。
+
+- **涉及文件**：
+  - `Shared/Configuration/UserSettings.swift` (+6 / -0)
+  - `HappaTools/App/AppModel.swift` (+5 / -0)
+  - `HappaTools/Views/SettingsView.swift` (+8 / -0)
+  - `Tests/HappaToolsSharedTests/UserSettingsTests.swift` (+5 / -0)
+  - `docs/CHANGELOG.md`
+
+- **Git 提交**：待记录 `feat: add persistent Dock visibility setting`
+
+---

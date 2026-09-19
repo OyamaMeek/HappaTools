@@ -28,6 +28,7 @@ final class AppModel: ObservableObject {
     func start() {
         guard !started else { return }
         started = true
+        applyDockVisibility()
         settings.operationInProgress = false
         let helper = Bundle.main.bundleURL.appendingPathComponent("Contents/Helpers/HappaTools README.app")
         let configuration = NSWorkspace.OpenConfiguration()
@@ -53,6 +54,10 @@ final class AppModel: ObservableObject {
             self?.refresh()
             self?.extensionEnabled = FIFinderSyncController.isExtensionEnabled
         }
+    }
+
+    func applyDockVisibility() {
+        NSApp.setActivationPolicy(settings.hideFromDock ? .accessory : .regular)
     }
 
     func refresh() {

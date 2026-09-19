@@ -13,6 +13,7 @@ final class UserSettingsTests: XCTestCase {
         XCTAssertEqual(settings.defaultBranch, "main")
         XCTAssertTrue(settings.showGitButton)
         XCTAssertTrue(settings.showReadmeButton)
+        XCTAssertFalse(settings.hideFromDock)
         XCTAssertFalse(settings.onboardingCompleted)
         XCTAssertTrue(FileManager.default.isExecutableFile(atPath: settings.gitExecutablePath))
 
@@ -20,6 +21,7 @@ final class UserSettingsTests: XCTestCase {
         settings.gitExecutablePath = "/custom/git"
         settings.showGitButton = false
         settings.showReadmeButton = false
+        settings.hideFromDock = true
         settings.onboardingCompleted = true
 
         let reopened = UserSettings(defaults: UserDefaults(suiteName: suite)!)
@@ -27,6 +29,9 @@ final class UserSettingsTests: XCTestCase {
         XCTAssertEqual(reopened.gitExecutablePath, "/custom/git")
         XCTAssertFalse(reopened.showGitButton)
         XCTAssertFalse(reopened.showReadmeButton)
+        XCTAssertTrue(reopened.hideFromDock)
         XCTAssertTrue(reopened.onboardingCompleted)
+        reopened.hideFromDock = false
+        XCTAssertFalse(settings.hideFromDock)
     }
 }
