@@ -33,6 +33,6 @@
   - `HANDOFF/20260919083738.md`
   - `docs/CHANGELOG.md`
 
-- **Git 提交**：待提交
+- **Git 提交**：`9df415c docs: add session handoff`
 
 ---
