@@ -1,5 +1,12 @@
 # 开发记录
 
+## [2026-09-19 10:50] 补充应用图标资源
+
+- **实际实现的功能与改动**：将 `HappaTools/Resources/AppIcon.icns` 纳入工程交付，匹配主应用 `CFBundleIconFile` 配置。
+- **Git 提交**：`f6e695a fix: include application icon asset`
+
+---
+
 ## [2026-09-19 10:45] 完成主应用与 Finder 扩展
 
 - **需求/问题描述**：
