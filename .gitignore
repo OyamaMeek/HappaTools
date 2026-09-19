@@ -4,6 +4,9 @@ DerivedData/
 dist/
 .agent/
 .superpowers/
+.claude/
+AGENT.md
+Claude/
 *.xcuserstate
 xcuserdata/
 .env
