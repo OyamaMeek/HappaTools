@@ -1,0 +1,10 @@
+.DS_Store
+.build/
+DerivedData/
+dist/
+.agent/
+.superpowers/
+*.xcuserstate
+xcuserdata/
+.env
+*.log
