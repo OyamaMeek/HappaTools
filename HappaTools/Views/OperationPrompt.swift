@@ -47,6 +47,7 @@ enum OperationPrompt {
         scroll.documentView = editor
         alert.accessoryView = scroll
         alert.window.initialFirstResponder = editor
+        editor.selectAll(nil)
         NSApp.activate(ignoringOtherApps: true)
         guard alert.runModal() == .alertFirstButtonReturn else { return nil }
         return editor.string

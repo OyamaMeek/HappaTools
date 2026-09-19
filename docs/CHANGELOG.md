@@ -81,6 +81,24 @@
   - `Tests/HappaToolsSharedTests/UserSettingsTests.swift` (+5 / -0)
   - `docs/CHANGELOG.md`
 
-- **Git 提交**：待记录 `feat: add persistent Dock visibility setting`
+- **Git 提交**：`05e3918 feat: add persistent Dock visibility setting`
+
+---
+
+## [2026-09-19 19:58] 提交输入默认全选日期
+
+- **需求/问题描述**：
+  > 输入 commit 时自动删除默认日期，像文件重命名一样默认选中文字。
+
+- **实际实现的功能与改动**：
+  - [提交框]：聚焦编辑器时全选默认日期，首次输入直接替换；不输入则保留默认日期。
+  - [测试/验证]：真实 NSAlert 烟测验证初始焦点、日期全选、中文多行替换、保留默认值和取消；修复前检查失败，修复后通过。
+
+- **涉及文件**：
+  - `HappaTools/Views/OperationPrompt.swift` (+1 / -0)
+  - `Tests/PromptSmoke/main.swift`
+  - `docs/CHANGELOG.md`
+
+- **Git 提交**：待记录 `fix: select default commit date for replacement`
 
 ---
