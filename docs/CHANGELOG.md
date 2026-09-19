@@ -1,5 +1,25 @@
 # 开发记录
 
+## [2026-09-19 10:45] 完成主应用与 Finder 扩展
+
+- **需求/问题描述**：
+  > 根据 Claude/Claude.md 在 main 分支完成 HappaTools 开发，并修复系统设置中扩展显示与沙盒加载问题。
+
+- **实际实现的功能与改动**：
+  - [主应用]：SwiftUI 概览、设置、历史、日志、URL 请求确认和后台操作处理。
+  - [Finder 集成]：Git 与 README 两个 Finder Sync 工具栏入口；README 扩展通过独立 `HappaTools README.app` helper 提供单独系统设置开关。
+  - [构建与交付]：Xcode 工程、沙盒 entitlement、由内到外签名构建、逐层公证检查脚本、本地 DMG 打包和验证记录。
+  - [验证]：shared tests 23/23、Xcode Debug scheme 测试、Release 构建、菜单 smoke test、主应用启动、pluginkit 注册、DMG 校验均已执行；真实 Finder 点击流程仍需用户在系统设置启用扩展后完成。
+
+- **涉及文件**：
+  - `HappaTools.xcodeproj/`、`HappaTools/`、`FinderSyncExtension/`、`ReadmeExtensionHost/`
+  - `Tests/MenuSmoke/`、`scripts/`
+  - `README.md`、`docs/SETUP.md`、`docs/DEMO.md`、`docs/VALIDATION.md`、`memory/`、`.gitignore`
+
+- **Git 提交**：`a4dac98 feat: add HappaTools host and Finder extensions`
+
+---
+
 ## [2026-09-19 08:27] 建立 Git、README 和共享数据层
 
 - **需求/问题描述**：
