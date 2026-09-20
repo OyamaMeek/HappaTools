@@ -17,6 +17,12 @@ swiftc FinderSyncExtension/MenuBuilder.swift Tests/MenuSmoke/main.swift -o .buil
 .build/menu-smoke
 swiftc HappaTools/Views/OperationPrompt.swift Tests/PromptSmoke/main.swift -o .build/prompt-smoke
 .build/prompt-smoke
+swiftc -F .build/xcode/Build/Products/Debug -framework HappaToolsShared \
+  -Xlinker -rpath -Xlinker "$PWD/.build/xcode/Build/Products/Debug" \
+  HappaTools/App/AppModel.swift HappaTools/App/GitOperationHandler.swift \
+  HappaTools/Views/OperationPrompt.swift Tests/FinderOperationSmoke/main.swift \
+  -o .build/finder-operation-smoke
+.build/finder-operation-smoke
 ```
 
 `build.sh` 生成本机临时签名构建，不代表 Developer ID 签名或公证。正式签名需要自己的开发者团队、App Group 和描述文件；见[安装与分发说明](docs/SETUP.md)。
@@ -33,6 +39,7 @@ bash scripts/package.sh
 - 不自动初始化仓库，不自动设置远端，不切换分支，不强制推送。推送失败会保留本地提交。
 - README：在 Git 按钮菜单的“提交并推送”下方选择“创建 README.md”。原子创建空文件，已有文件、目录或符号链接均不覆盖。
 - 设置：默认分支、Git 路径、Git / README 操作开关、在 Dock 中隐藏应用。Dock 设置保存后立即生效，重启后保留；隐藏后仍可从“应用程序”打开 HappaTools。已检出的分支优先于默认分支。
+- Finder 操作：点击结果提示的“好”或取消操作后，关闭 HappaTools 窗口并返回 Finder，保留 Finder 当前目录和窗口顺序；Dock 显示继续遵循保存的设置。
 - 历史与日志：显示最近 100 条结果，支持文本、日期、操作类型、状态筛选；每 3 秒刷新；主应用启动和每次执行操作时清理 30 天前记录。
 - Git 在后台运行，每条命令限时 30 秒，日志中每个输出流最多保留 1 MiB；同仓库操作用跨进程锁避免重复提交。
 

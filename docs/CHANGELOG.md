@@ -148,3 +148,26 @@
 - **Git 提交**：`9130eab fix: simplify README creation wording`
 
 ---
+
+## [2026-09-21 06:58] 操作确认后返回访达并修复 Dock 隐藏
+
+- **需求/问题描述**：
+  > 点击“好”后关闭 HappaTools 界面，回到刚才的访达窗口；修复仍显示在 Dock 栏的问题。
+
+- **实际实现的功能与改动**：
+  - [统一收尾]：完成、失败和取消后关闭可见的 HappaTools 窗口，隐藏应用并激活已有 Finder，保留当前目录和窗口顺序。
+  - [异常处理]：请求解析、操作禁用及目录失效错误也走统一结果弹窗；结果弹窗关闭前阻止重复操作。
+  - [Dock 设置]：使用 LSUIElement 启动，在应用启动完成、操作入口及收尾阶段应用保存的显示偏好，保留设置页的显示/隐藏开关。
+  - [本机更新]：安装修复版并保留 ZIP 备份，签名与安装版主程序哈希校验通过。
+  - [测试/验证]：23 项共享测试、Release 构建及 Finder 操作回归检查通过；覆盖 Git / README 取消、README 成功、Git 失败及目录失效。实机确认 accessory（1）和关闭窗口后的再次唤起；实机 Git 测试遇到命令超时，未计为提交成功，详见验证记录。
+
+- **涉及文件**：
+  - `HappaTools/App/AppModel.swift` (+56 / -28)
+  - `HappaTools/App/HappaToolsApp.swift` (+1 / -1)
+  - `HappaTools/Resources/Info.plist` (+1 / -0)
+  - `Tests/FinderOperationSmoke/main.swift`
+  - `README.md`、`docs/VALIDATION.md`、`docs/CHANGELOG.md`
+
+- **Git 提交**：待记录 `fix: return to Finder after operations and restore Dock policy`
+
+---

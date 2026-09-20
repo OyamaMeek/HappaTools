@@ -1,6 +1,18 @@
 # 验证记录
 
-更新时间：2026-09-19。以下结果来自当前工作区和本机已安装的 `/Applications/HappaTools.app`。
+更新时间：2026-09-21。以下结果来自当前工作区和本机已安装的 `/Applications/HappaTools.app`。
+
+## 2026-09-21 窗口收尾与 Dock 修复
+
+- `Tests/FinderOperationSmoke/main.swift`：真实 AppKit 弹窗检查通过，覆盖启动时恢复 Dock 设置、Git / README 取消、README 创建成功、Git 失败、目录失效和结果弹窗期间防重入。取消后窗口未关闭、目录失效未走统一弹窗两项均先复现断言失败，再修复并验证通过；2026-09-21 重新运行通过。编译命令见 README。
+- `swift test --scratch-path .build/core`：23/23 通过。`bash scripts/build.sh Release` 通过，签名校验通过。构建日志中的 Simulator 服务和 AppIntents 元数据提示未阻止 macOS 构建。
+- 已更新 `/Applications/HappaTools.app`；2026-09-21 签名校验通过，主程序 SHA-256 与 Release 构建一致。原应用备份为 `.build/HappaTools-before-finder-return-fix.zip`。本次未重制 DMG。
+- 实机只读检查显示安装版激活策略为 accessory（1），保存的隐藏 Dock 设置生效；主窗口关闭后可重新打开，Finder 菜单能再次唤起 Git 弹窗。
+- 实机 README 已在隔离测试目录创建。Git 验收遇到 `git rev-parse --is-inside-work-tree` 超时，因此不计为实机完整提交/推送成功。底层 Git 工作流由共享测试中的临时仓库和本地 bare remote 验证。
+- 桌面自动化曾多次超时；进程采样显示一次启动在等待 macOS 配置服务，随后恢复响应。针对已关闭应用调用界面查询会重新唤起主窗口，收尾验证应使用回归检查和不激活应用的状态读取。
+- Dock 使用系统 [accessory 激活策略](https://developer.apple.com/documentation/appkit/nsapplication/activationpolicy-swift.enum/accessory)；窗口收尾仅激活已有 Finder，不打开目录 URL，避免额外创建访达窗口或改变目录。
+
+## 2026-09-19 验证记录
 
 ## 已完成
 

@@ -3,7 +3,7 @@ import Combine
 import FinderSync
 import HappaToolsShared
 
-final class AppModel: ObservableObject {
+final class AppModel: NSObject, ObservableObject, NSApplicationDelegate {
     let settings = UserSettings()
     @Published var records: [OperationRecord] = []
     @Published var errorMessage: String?
@@ -24,6 +24,10 @@ final class AppModel: ObservableObject {
     private let operationHandler = GitOperationHandler()
     private var isChoosing = false
     @Published var operationRunning = false
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        applyDockVisibility()
+    }
 
     func start() {
         guard !started else { return }
@@ -131,59 +135,83 @@ final class AppModel: ObservableObject {
     }
 
     func handle(_ url: URL) {
-        guard !operationHandler.isWorking, !isChoosing else { return }
-        let request: FinderRequest
-        do {
-            request = try FinderRequest(url: url)
-        } catch {
-            errorMessage = error.localizedDescription
-            return
-        }
-        guard request.operation == .git ? settings.showGitButton : settings.showReadmeButton else {
-            errorMessage = "此操作已在设置中关闭。"
-            return
-        }
+        guard !operationRunning, !operationHandler.isWorking, !isChoosing else { return }
+        applyDockVisibility()
         isChoosing = true
         showOnboarding = false
         DispatchQueue.main.async {
             defer { self.isChoosing = false }
-            guard let directory = request.directory ?? OperationPrompt.chooseDirectory() else { return }
+            let request: FinderRequest
+            do {
+                request = try FinderRequest(url: url)
+            } catch {
+                self.presentFinderResult(error.localizedDescription, failed: true)
+                return
+            }
+            guard request.operation == .git ? self.settings.showGitButton : self.settings.showReadmeButton else {
+                self.presentFinderResult("此操作已在设置中关闭。", failed: true)
+                return
+            }
+            guard let directory = request.directory ?? OperationPrompt.chooseDirectory() else {
+                self.returnToFinder()
+                return
+            }
             do {
                 guard try directory.resourceValues(forKeys: [.isDirectoryKey]).isDirectory == true else {
-                    self.errorMessage = "请选择一个实际文件夹。"
+                    self.presentFinderResult("请选择一个实际文件夹。", failed: true)
                     return
                 }
             } catch {
-                self.errorMessage = error.localizedDescription
+                self.presentFinderResult(error.localizedDescription, failed: true)
                 return
             }
             let message: String?
             if request.operation == .git {
-                guard let input = OperationPrompt.commitMessage(at: directory) else { return }
+                guard let input = OperationPrompt.commitMessage(at: directory) else {
+                    self.returnToFinder()
+                    return
+                }
                 message = input
             } else {
-                guard OperationPrompt.confirmReadme(at: directory) else { return }
+                guard OperationPrompt.confirmReadme(at: directory) else {
+                    self.returnToFinder()
+                    return
+                }
                 message = nil
             }
             self.operationRunning = true
             self.settings.operationInProgress = true
             self.operationHandler.perform(at: directory, message: message) { result in
-                self.operationRunning = false
-                self.settings.operationInProgress = false
                 self.refresh()
-                let alert = NSAlert()
                 switch result {
                 case .success(let file):
-                    alert.messageText = "操作完成"
-                    alert.informativeText = file == nil ? "Git 提交与推送已完成。" : "已创建 README.md。"
+                    self.presentFinderResult(file == nil ? "Git 提交与推送已完成。" : "已创建 README.md。")
                 case .failure(let error):
-                    alert.alertStyle = .warning
-                    alert.messageText = "操作失败"
-                    alert.informativeText = error.localizedDescription
+                    self.presentFinderResult(error.localizedDescription, failed: true)
                 }
-                NSApp.activate(ignoringOtherApps: true)
-                alert.runModal()
+                self.operationRunning = false
+                self.settings.operationInProgress = false
             }
         }
+    }
+
+    private func presentFinderResult(_ message: String, failed: Bool = false) {
+        let alert = NSAlert()
+        alert.alertStyle = failed ? .warning : .informational
+        alert.messageText = failed ? "操作失败" : "操作完成"
+        alert.informativeText = message
+        alert.addButton(withTitle: "好")
+        NSApp.activate(ignoringOtherApps: true)
+        alert.runModal()
+        returnToFinder()
+    }
+
+    private func returnToFinder() {
+        for window in NSApp.windows where window.isVisible { window.close() }
+        applyDockVisibility()
+        // Activate Finder without opening a URL, preserving its current folder and window order.
+        NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.finder")
+            .first?.activate(options: [])
+        NSApp.hide(nil)
     }
 }

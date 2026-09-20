@@ -2,7 +2,7 @@ import SwiftUI
 
 @main
 struct HappaToolsApp: App {
-    @StateObject private var model = AppModel()
+    @NSApplicationDelegateAdaptor(AppModel.self) private var model
 
     var body: some Scene {
         WindowGroup {
