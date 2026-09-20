@@ -13,7 +13,7 @@ enum OperationPrompt {
 
     static func confirmReadme(at directory: URL) -> Bool {
         let alert = NSAlert()
-        alert.messageText = "创建空白 README.md"
+        alert.messageText = "创建 README.md"
         alert.informativeText = directory.path + "\n已有文件会保留原样。"
         alert.addButton(withTitle: "创建")
         alert.addButton(withTitle: "取消")

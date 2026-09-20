@@ -8,11 +8,11 @@ struct OverviewView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 22) {
                 Label("HappaTools", systemImage: "leaf.fill").font(.largeTitle)
-                Text("在 Finder 中提交与推送 Git 更改，或创建空白 README.md。")
+                Text("在 Finder 中提交与推送 Git 更改，或创建 README.md。")
                     .font(.title3).foregroundColor(.secondary)
                 Divider()
                 Label(model.extensionEnabled ? "Git 扩展已启用" : "Git 扩展尚未启用", systemImage: model.extensionEnabled ? "checkmark.circle.fill" : "exclamationmark.circle")
-                Text("在系统设置 → 通用 → 登录项与扩展 → 文件提供程序中启用 HappaTools，再通过 Finder → 显示 → 自定工具栏添加 Git 按钮。“创建空白 README.md”位于“提交并推送”下方。如需独立 README 按钮，可另外启用 HappaTools README 扩展。")
+                Text("在系统设置 → 通用 → 登录项与扩展 → 文件提供程序中启用 HappaTools，再通过 Finder → 显示 → 自定工具栏添加 Git 按钮。“创建 README.md”位于“提交并推送”下方。如需独立 README 按钮，可另外启用 HappaTools README 扩展。")
                     .foregroundColor(.secondary)
                 Button("管理 Finder 扩展") { FIFinderSyncController.showExtensionManagementInterface() }
                 Divider()

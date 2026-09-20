@@ -13,7 +13,7 @@ enum MenuBuilder {
             let enabled = git ? gitEnabled : readmeEnabled
             var title = directory == nil
                 ? (git ? "选择文件夹并提交…" : "选择文件夹并创建 README…")
-                : (git ? "提交并推送…" : "创建空白 README.md")
+                : (git ? "提交并推送…" : "创建 README.md")
             if !enabled { title += "（已关闭）" }
             else if busy { title += "（正在处理…）" }
             let item = NSMenuItem(title: title, action: git ? gitAction : readmeAction, keyEquivalent: "")

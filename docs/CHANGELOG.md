@@ -125,3 +125,26 @@
 - **Git 提交**：`875d64b fix: expose README creation in Git toolbar menu`
 
 ---
+
+## [2026-09-20 11:53] 简化创建 README 文案
+
+- **需求/问题描述**：
+  > 删除“创建空白 README.md”中的“空白”两个字。
+
+- **实际实现的功能与改动**：
+  - [界面文案]：菜单、工具栏提示、确认框、成功提示和概览统一使用“创建 README.md”。
+  - [使用说明]：同步 README 中的功能名称，文件创建逻辑保持不变。
+  - [测试/验证]：Debug 构建和签名校验通过；现有 Finder 菜单烟测通过；检查确认界面源码不再包含“创建空白”。
+
+- **涉及文件**：
+  - `FinderSyncExtension/MenuBuilder.swift` (+1 / -1)
+  - `FinderSyncExtension/FinderSync.swift` (+1 / -1)
+  - `HappaTools/Views/OperationPrompt.swift` (+1 / -1)
+  - `HappaTools/Views/OverviewView.swift` (+2 / -2)
+  - `HappaTools/App/AppModel.swift` (+1 / -1)
+  - `README.md` (+2 / -2)
+  - `docs/CHANGELOG.md`
+
+- **Git 提交**：待回填 `fix: simplify README creation wording`
+
+---

@@ -175,7 +175,7 @@ final class AppModel: ObservableObject {
                 switch result {
                 case .success(let file):
                     alert.messageText = "操作完成"
-                    alert.informativeText = file == nil ? "Git 提交与推送已完成。" : "已创建空白 README.md。"
+                    alert.informativeText = file == nil ? "Git 提交与推送已完成。" : "已创建 README.md。"
                 case .failure(let error):
                     alert.alertStyle = .warning
                     alert.messageText = "操作失败"

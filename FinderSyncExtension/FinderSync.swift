@@ -41,7 +41,7 @@ final class FinderSync: FIFinderSync {
     }
 
     override var toolbarItemName: String { isGit ? "Git" : "README" }
-    override var toolbarItemToolTip: String { isGit ? "提交并推送，或创建空白 README.md" : "创建空白 README.md" }
+    override var toolbarItemToolTip: String { isGit ? "提交并推送，或创建 README.md" : "创建 README.md" }
     override var toolbarItemImage: NSImage {
         let image = NSImage(systemSymbolName: isGit ? "arrow.triangle.branch" : "doc.badge.plus", accessibilityDescription: toolbarItemName) ?? NSImage(named: NSImage.actionTemplateName)!
         image.isTemplate = true
