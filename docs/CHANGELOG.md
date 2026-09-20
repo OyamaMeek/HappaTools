@@ -145,6 +145,6 @@
   - `README.md` (+2 / -2)
   - `docs/CHANGELOG.md`
 
-- **Git 提交**：待回填 `fix: simplify README creation wording`
+- **Git 提交**：`9130eab fix: simplify README creation wording`
 
 ---
