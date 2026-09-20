@@ -64,7 +64,7 @@
 
 ---
 
-## [2026-09-19 19:57] 增加 Dock 图标隐藏开关
+## [2026-09-19 19:56] 增加 Dock 图标隐藏开关
 
 - **需求/问题描述**：
   > 增加一个在 Dock 栏不显示应用的开关。
@@ -85,7 +85,7 @@
 
 ---
 
-## [2026-09-19 19:58] 提交输入默认全选日期
+## [2026-09-19 19:57] 提交输入默认全选日期
 
 - **需求/问题描述**：
   > 输入 commit 时自动删除默认日期，像文件重命名一样默认选中文字。
@@ -111,7 +111,7 @@
 - **实际实现的功能与改动**：
   - [菜单入口]：Git 工具栏菜单同时提供提交和创建 README，保留可选独立 README 扩展。
   - [操作分派]：两个菜单项使用独立 selector，按实际操作检查开关；忙碌时统一禁用，无目标路径时允许选择文件夹。
-  - [使用引导]：概览和首次启动引导改为只需启用 HappaTools 即可使用两项功能。
+  - [使用引导]：概览和首次启动引导改为只需启用 HappaTools 即可使用两项功能；同步 README、安装说明和验证记录。
   - [测试/验证]：菜单 32 种状态检查通过；实机 Finder 显示两项操作，并成功在临时目录创建 0 字节 README.md；共享测试最终 23/23 通过，Debug/Release 构建与签名验证通过。
 
 - **涉及文件**：
@@ -120,8 +120,8 @@
   - `HappaTools/Views/ContentView.swift` (+2 / -2)
   - `HappaTools/Views/OverviewView.swift` (+1 / -1)
   - `Tests/MenuSmoke/main.swift` (+24 / -13)
-  - `docs/CHANGELOG.md`
+  - `README.md`、`docs/SETUP.md`、`docs/VALIDATION.md`、`docs/CHANGELOG.md`
 
-- **Git 提交**：待记录 `fix: expose README creation in Git toolbar menu`
+- **Git 提交**：`875d64b fix: expose README creation in Git toolbar menu`
 
 ---
