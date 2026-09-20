@@ -168,6 +168,6 @@
   - `Tests/FinderOperationSmoke/main.swift`
   - `README.md`、`docs/VALIDATION.md`、`docs/CHANGELOG.md`
 
-- **Git 提交**：待记录 `fix: return to Finder after operations and restore Dock policy`
+- **Git 提交**：`4b4c707 fix: return to Finder after operations and restore Dock policy`
 
 ---
