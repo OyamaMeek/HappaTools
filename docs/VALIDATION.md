@@ -1,6 +1,13 @@
 # 验证记录
 
-更新时间：2026-09-21。以下结果来自当前工作区和本机已安装的 `/Applications/HappaTools.app`。
+更新时间：2026-09-29。以下结果来自当前工作区和本机已安装的 `/Applications/HappaTools.app`。
+
+## 2026-09-29 提交框光标
+
+- 真实 AppKit PromptSmoke 先复现深色光标亮度差不足，设置 `insertionPointColor = .textColor` 后通过深浅色检查；日期全选、直接替换、中文多行、默认值及取消继续通过。未进行截图或视觉验收。
+- `swift test --scratch-path .build/core`：23/23 通过；首次运行受到嵌套沙盒限制，获准在沙盒外重新运行后通过。测试临时目录为 `.build/test-tmp`。
+- `bash scripts/build.sh Release` 及签名校验通过。构建仍有 Simulator 服务、AppIntents 元数据及扩展版本号警告；未修改这些无关配置。
+- 已更新 `/Applications/HappaTools.app`，签名校验及主程序逐字节比对通过；SHA-256 为 `88f58f120398ce0fde772de7553890d9c6afc23f710a632d9199db4877a0598e`。旧版备份为 `.build/HappaTools-before-cursor-fix-20260929.zip`。
 
 ## 2026-09-21 窗口收尾与 Dock 修复
 

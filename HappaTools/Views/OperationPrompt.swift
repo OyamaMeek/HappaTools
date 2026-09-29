@@ -36,6 +36,7 @@ enum OperationPrompt {
         editor.isAutomaticQuoteSubstitutionEnabled = false
         editor.isAutomaticDashSubstitutionEnabled = false
         editor.font = .systemFont(ofSize: 13)
+        editor.insertionPointColor = .textColor
         editor.textContainerInset = NSSize(width: 6, height: 8)
         editor.setAccessibilityLabel("Git 提交说明，支持多行")
         editor.isVerticallyResizable = true

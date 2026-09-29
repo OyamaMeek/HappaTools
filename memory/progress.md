@@ -1,5 +1,14 @@
 # 当前进度
 
+## 2026-09-29 提交框光标
+
+- [x] 读取提交框、Finder 调用入口与已有测试；用户确认保留日期全选。
+- [x] 扩展弹窗回归：深色光标亮度差不足先失败；设置系统文字颜色后深浅色检查通过，日期全选与多行输入保留。
+- [x] 23 项共享测试、Release 构建、签名与安装版主程序一致性检查通过；已更新 `/Applications/HappaTools.app`，备份位于 `.build/HappaTools-before-cursor-fix-20260929.zip`。
+- [ ] 更新日志、归档对话并提交推送。
+
+## 历史实现记录
+
 - 已读取 Claude/Claude.md、AGENT.md；用户原始材料保持原样，不纳入实现提交。
 - 共享层、Finder 扩展、主应用、Xcode 工程和 helper 架构已经实现。外层主应用非沙盒；Git extension、README extension 和 README helper 保持沙盒。
 - `swift test --scratch-path .build/core` 通过 23/23；Xcode Debug scheme 测试通过；Release 构建、临时签名、菜单 smoke test 和 DMG 校验通过。

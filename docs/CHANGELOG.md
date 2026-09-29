@@ -171,3 +171,24 @@
 - **Git 提交**：`4b4c707 fix: return to Finder after operations and restore Dock policy`
 
 ---
+
+## [2026-09-29 21:59] 提高提交框输入光标可见度
+
+- **需求/问题描述**：
+  > 在提交输入框增加清晰的光标；保留日期全选，点击或输入后显示。
+
+- **实际实现的功能与改动**：
+  - [光标颜色]：插入光标使用系统动态文字颜色，适配深浅色背景，保留日期全选及输入替换行为。
+  - [测试/验证]：PromptSmoke 先复现深色下亮度差不足，修复后深浅色、日期全选、多行输入、默认值和取消检查通过；23 项共享测试、Release 构建和签名校验通过。未进行视觉验收。
+  - [本机更新]：已更新 `/Applications/HappaTools.app`，与构建产物主程序逐字节一致；旧版已备份到 `.build/HappaTools-before-cursor-fix-20260929.zip`。
+
+- **涉及文件**：
+  - `HappaTools/Views/OperationPrompt.swift` (+1 / -0)
+  - `Tests/PromptSmoke/main.swift` (+12 / -1)
+  - `memory/plan.md`、`memory/progress.md`、`memory/verify.md`
+  - `docs/VALIDATION.md`、`docs/CHANGELOG.md`
+  - `context/2026/09/29/21-59-00/对话.md`
+
+- **Git 提交**：待提交
+
+---

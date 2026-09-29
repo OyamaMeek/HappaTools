@@ -1,5 +1,11 @@
 # HappaTools Implementation Plan
 
+## 2026-09-29 提交框光标
+
+- 保留默认日期全选；点击或输入后的插入光标随深浅色模式保持清晰。
+- 复用 AppKit 的动态文字颜色与现有 PromptSmoke，先验证颜色对比不足，再作最小修复。
+- 运行弹窗回归、共享测试、Release 构建与签名校验；记录结果并提交、推送。
+
 > 使用 superpowers:subagent-driven-development 分工实施；用户已授权直接在 main 开发并推送。
 
 **Goal:** 根据 `Claude/Claude.md` 建立 macOS 11+ Finder Git / README 工具及主应用。
