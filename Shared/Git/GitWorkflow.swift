@@ -162,7 +162,7 @@ private struct RepositoryContext {
     let destination: String
 }
 
-private final class RepositoryLock {
+final class RepositoryLock {
     private let descriptor: Int32
 
     init(path: String) throws {

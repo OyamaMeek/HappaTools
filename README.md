@@ -1,6 +1,6 @@
 # HappaTools
 
-macOS Finder 工具：提交并推送 Git 更改、创建 `README.md`，并在主应用中管理设置、操作历史和运行日志。
+macOS Finder 工具：提交并推送 Git 更改、创建 `README.md`；主应用还提供 Things3 自动上传，以及设置、操作历史和运行日志。
 
 要求 macOS 11 或更高版本；工程使用 Xcode 16 的目录同步功能，开发需要 Xcode 16 或更新版本。原生 SwiftUI、AppKit、FinderSync、SQLite3，无第三方依赖。
 
@@ -19,7 +19,7 @@ swiftc HappaTools/Views/OperationPrompt.swift Tests/PromptSmoke/main.swift -o .b
 .build/prompt-smoke
 swiftc -F .build/xcode/Build/Products/Debug -framework HappaToolsShared \
   -Xlinker -rpath -Xlinker "$PWD/.build/xcode/Build/Products/Debug" \
-  HappaTools/App/AppModel.swift HappaTools/App/GitOperationHandler.swift \
+  HappaTools/App/AppModel.swift HappaTools/App/GitOperationHandler.swift HappaTools/App/ThingsController.swift \
   HappaTools/Views/OperationPrompt.swift Tests/FinderOperationSmoke/main.swift \
   -o .build/finder-operation-smoke
 .build/finder-operation-smoke
@@ -42,6 +42,10 @@ bash scripts/package.sh
 - Finder 操作：点击结果提示的“好”或取消操作后，关闭 HappaTools 窗口并返回 Finder，保留 Finder 当前目录和窗口顺序；Dock 显示继续遵循保存的设置。
 - 历史与日志：显示最近 100 条结果，支持文本、日期、操作类型、状态筛选；每 3 秒刷新；主应用启动和每次执行操作时清理 30 天前记录。
 - Git 在后台运行，每条命令限时 30 秒，日志中每个输出流最多保留 1 MiB；同仓库操作用跨进程锁避免重复提交。
+
+## Things3 自动上传
+
+入口位于主应用侧边栏的 **Things3** 页面。选择已有本地 Git 仓库，保存配置，再开启自动上传；默认每 5 分钟检查一次。支持多个 Markdown 文件、项目和领域目录及归档。使用条件、导出范围和验证命令见 [Things3 使用说明](docs/THINGS3.md)。
 
 ## Finder 平台限制
 

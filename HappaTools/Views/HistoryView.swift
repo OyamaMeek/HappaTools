@@ -23,6 +23,7 @@ struct HistoryView: View {
                     Text("提交").tag("git_commit")
                     Text("推送").tag("git_push")
                     Text("README").tag("create_readme")
+                    Text("Things3").tag("things_sync")
                 }
                 Picker("状态", selection: $model.status) {
                     Text("全部").tag("")
@@ -80,6 +81,7 @@ struct HistoryView: View {
         switch type {
         case "git_commit": return "Git 提交"
         case "git_push": return "Git 推送"
+        case "things_sync": return "Things3 同步"
         default: return "创建 README"
         }
     }

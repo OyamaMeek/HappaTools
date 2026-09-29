@@ -2,6 +2,15 @@
 
 更新时间：2026-09-29。以下结果来自当前工作区和本机已安装的 `/Applications/HappaTools.app`。
 
+## 2026-09-29 Things3 自动上传
+
+- `swift test --scratch-path .build/core`：31/31 通过，其中8项 Things3 测试使用真实 SQLite 参考样本及本地 bare Git 远端。覆盖只读/WAL、状态和 Checklist、归档、陌生文件及符号链接保护、坏清单、大小写重命名、提交失败后的删除重试、断网重试、分支和远端改变。
+- 独立核心审查发现4项边界问题，均使用失败→通过的测试验证修复；应用控制器、设置、退出等待和入口审查未发现可行动问题。
+- `ThingsAppSmoke` 在最终 Release 上通过配置保存、自动同步启动、禁止重入、真实上传、关闭、设置重载、历史记录和重复同步无提交检查。未通过等待真实分钟间隔来验收长期后台运行。
+- 本机 Things3 数据库只读导出188个任务、32个托管路径，个人任务只写到 `.build`，没有上传至源码仓库或任何网络远端。网络 GitHub 备份目标尚未由用户配置；上传行为通过本地 bare remote 验证。
+- 最终 Release 构建、签名校验和 FinderOperationSmoke 通过。构建存在原有 AppIntents/扩展版本号警告；未执行截图或视觉验收。
+- 已更新并启动 `/Applications/HappaTools.app`，签名及主程序逐字节一致性检查通过。旧版备份：`.build/HappaTools-before-things3-20260929.zip`。采用临时签名，未公证；本次未重制 DMG。
+
 ## 2026-09-29 提交框光标
 
 - 真实 AppKit PromptSmoke 先复现深色光标亮度差不足，设置 `insertionPointColor = .textColor` 后通过深浅色检查；日期全选、直接替换、中文多行、默认值及取消继续通过。未进行截图或视觉验收。

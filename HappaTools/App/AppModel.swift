@@ -5,6 +5,7 @@ import HappaToolsShared
 
 final class AppModel: NSObject, ObservableObject, NSApplicationDelegate {
     let settings = UserSettings()
+    lazy var things = ThingsController(settings: settings)
     @Published var records: [OperationRecord] = []
     @Published var errorMessage: String?
     @Published var extensionEnabled = false
@@ -29,9 +30,17 @@ final class AppModel: NSObject, ObservableObject, NSApplicationDelegate {
         applyDockVisibility()
     }
 
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        things.stop()
+        guard things.isWorking else { return .terminateNow }
+        things.onIdle = { sender.reply(toApplicationShouldTerminate: true) }
+        return .terminateLater
+    }
+
     func start() {
         guard !started else { return }
         started = true
+        things.start()
         applyDockVisibility()
         settings.operationInProgress = false
         let helper = Bundle.main.bundleURL.appendingPathComponent("Contents/Helpers/HappaTools README.app")

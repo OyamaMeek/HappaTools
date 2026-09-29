@@ -58,6 +58,11 @@ public final class UserSettings {
         set { store(newValue, forKey: Key.operationInProgress) }
     }
 
+    public var thingsConfigurationData: Data? {
+        get { defaults.data(forKey: "happatools.thingsConfiguration") }
+        set { defaults.set(newValue, forKey: "happatools.thingsConfiguration"); defaults.synchronize() }
+    }
+
     private func bool(forKey key: String, default defaultValue: Bool) -> Bool {
         defaults.object(forKey: key) == nil ? defaultValue : defaults.bool(forKey: key)
     }

@@ -3,7 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var model: AppModel
     @State private var selection = "概览"
-    private let pages = [("概览", "square.grid.2x2"), ("设置", "gearshape"), ("操作历史", "clock"), ("日志", "text.alignleft")]
+    private let pages = [("概览", "square.grid.2x2"), ("Things3", "checkmark.circle"), ("设置", "gearshape"), ("操作历史", "clock"), ("日志", "text.alignleft")]
 
     var body: some View {
         NavigationView {
@@ -23,6 +23,7 @@ struct ContentView: View {
             .frame(minWidth: 160, idealWidth: 180)
             Group {
                 switch selection {
+                case "Things3": ThingsView(controller: model.things)
                 case "设置": SettingsView().padding(28)
                 case "操作历史": HistoryView(showDetails: false)
                 case "日志": HistoryView(showDetails: true)

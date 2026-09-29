@@ -192,3 +192,30 @@
 - **Git 提交**：`17a247d fix: improve commit editor cursor visibility`，已推送至 `origin/main`。
 
 ---
+
+## [2026-09-29 23:19] 在应用内增加 Things3 自动上传
+
+- **需求/问题描述**：
+  > 参考 things.py 和尚未验证的 Things3-push 增加 Things3 自动上传 Git 功能；仅应用内入口；保留多个 Markdown 文件及目录。
+
+- **实际实现的功能与改动**：
+  - [Things3 页面]：选择仓库和数据库、保存配置、定时自动上传、立即同步、结果与日志；默认关闭，应用退出等待当前任务。
+  - [只读导出]：同一 SQLite 事务读取含 WAL 的完整快照，生成列表、项目、领域及归档文件；原子写入、所有权和符号链接保护、完整状态与 Checklist 顺序和完成时间。
+  - [Git]：复用现有执行器和仓库锁；明确路径提交，保留不相关暂存内容；分支/远端校验，提交和推送失败可重试，无自动合并或强制推送。
+  - [参考评估]：针对多连接快照不一致、错误被记录为成功、项目状态遗漏和多个数据库误选风险采用明确处理；未直接包装参考 Python 服务。
+  - [测试/验证]：31/31 共享测试，ThingsAppSmoke、FinderOperationSmoke、Release 构建和签名检查通过。独立审查4项核心问题均先复现后修复。真实数据库只读导出188个任务、32个托管路径，仅存于忽略目录。未执行视觉验收或个人数据网络推送。
+  - [本机更新]：已备份旧版并更新、启动 `/Applications/HappaTools.app`；签名和主程序一致性校验通过。
+
+- **涉及文件**：
+  - `Shared/Things/ThingsReader.swift`、`ThingsExport.swift`、`ThingsFiles.swift`、`ThingsSync.swift`
+  - `Shared/Git/GitWorkflow.swift`、`Shared/Configuration/UserSettings.swift`
+  - `HappaTools/App/ThingsController.swift`、`AppModel.swift`
+  - `HappaTools/Views/ThingsView.swift`、`ContentView.swift`、`HistoryView.swift`
+  - `Tests/HappaToolsSharedTests/ThingsTests.swift`、`Tests/ThingsAppSmoke/main.swift`、`Tests/Fixtures/Things/`
+  - `README.md`、`docs/THINGS3.md`、`docs/VALIDATION.md`、`docs/CHANGELOG.md`
+  - `memory/agents.md`、`memory/plan.md`、`memory/progress.md`、`memory/verify.md`
+  - `context/2026/09/29/23-19-22/对话.md`
+
+- **Git 提交**：待提交。
+
+---
