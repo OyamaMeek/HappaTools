@@ -189,6 +189,6 @@
   - `docs/VALIDATION.md`、`docs/CHANGELOG.md`
   - `context/2026/09/29/21-59-00/对话.md`
 
-- **Git 提交**：待提交
+- **Git 提交**：`17a247d fix: improve commit editor cursor visibility`，已推送至 `origin/main`。
 
 ---
