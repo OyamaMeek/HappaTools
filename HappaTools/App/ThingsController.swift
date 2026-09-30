@@ -56,8 +56,10 @@ final class ThingsController: ObservableObject {
 
     func setAutomatic(_ enabled: Bool) {
         guard !enabled || configuration.target != nil else {
-            failed = true
-            status = "请先选择仓库并保存配置。"
+            if !failed {
+                failed = true
+                status = "请先选择仓库并保存配置。"
+            }
             return
         }
         var saved = configuration
@@ -110,8 +112,10 @@ final class ThingsController: ObservableObject {
     func syncNow() {
         guard !isWorking, !stopping else { return }
         guard let target = configuration.target, !configuration.databasePath.isEmpty else {
-            failed = true
-            status = "请先选择仓库并保存配置。"
+            if !failed {
+                failed = true
+                status = "请先选择仓库并保存配置。"
+            }
             return
         }
         isWorking = true

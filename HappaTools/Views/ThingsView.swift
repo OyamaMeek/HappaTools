@@ -33,6 +33,7 @@ struct ThingsView: View {
                 }
                 Divider()
                 Toggle("自动上传", isOn: Binding(get: { controller.configuration.enabled }, set: controller.setAutomatic))
+                    .disabled(controller.configuration.target == nil)
                 HStack {
                     Button("立即同步", action: controller.syncNow)
                         .disabled(controller.isWorking || controller.configuration.target == nil)
@@ -46,7 +47,7 @@ struct ThingsView: View {
                 }
                 Text("应用运行时定时上传，关闭窗口后继续，退出应用后停止。任务按列表、项目和领域保存；消失的项目或领域移入 Archived。生成文件由应用维护，请将自己的笔记放在其他文件中。")
                     .font(.callout).foregroundColor(.secondary)
-                Text("请选择专用的私有备份仓库，并预先设置 Git 上游和免交互认证。推送会包含当前分支已有的待推送提交；分支或远端改变后须重新保存配置。")
+                Text("请选择专用的私有备份仓库，并预先配置远端和免交互认证。没有上游且只有一个远端时，使用同名分支，首次上传成功后设置上游。推送包含当前分支已有的待推送提交。")
                     .font(.callout).foregroundColor(.secondary)
                 Text("仅读取 Things3，不会回写任务。重复任务模板和附件不导出，已生成的重复任务会导出。")
                     .font(.caption).foregroundColor(.secondary)

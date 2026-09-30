@@ -219,3 +219,25 @@
 - **Git 提交**：`fd2ee51 feat: add in-app Things3 automatic Git upload`，已推送至 `origin/main`。
 
 ---
+
+## [2026-09-30 11:07] 修复 Things3 空仓库保存配置
+
+- **需求/问题描述**：
+  > 用户已点击保存配置，页面仍提示先保存且无法同步。
+
+- **实际实现的功能与改动**：
+  - [配置保存]：支持无提交、无上游且只有一个远端的仓库，使用当前同名分支；保存只读检查，首次上传成功后建立上游。
+  - [错误信息]：保存失败后保留具体原因，未配置时禁用自动上传开关。
+  - [测试/验证]：空仓库回归先失败后通过；32/32共享测试、应用行为烟测及实际目标只读配置保存通过；涵盖首次推送失败后的重试和用户暂存内容保护。独立审查纠正一项测试前提，未发现其他可行动问题。
+  - [本机更新]：Release 构建及签名通过，备份并更新、启动安装版，主程序一致性检查通过；未执行视觉验收或个人任务网络上传。
+
+- **涉及文件**：
+  - `Shared/Things/ThingsSync.swift`、`HappaTools/App/ThingsController.swift`、`HappaTools/Views/ThingsView.swift`
+  - `Tests/HappaToolsSharedTests/ThingsTests.swift`、`Tests/ThingsAppSmoke/main.swift`
+  - `docs/THINGS3.md`、`docs/VALIDATION.md`、`docs/CHANGELOG.md`
+  - `memory/plan.md`、`memory/progress.md`、`memory/verify.md`、`memory/gotchas.md`
+  - `context/2026/09/30/11-07-15/对话.md`
+
+- **Git 提交**：待提交。
+
+---
