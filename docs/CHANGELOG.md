@@ -238,6 +238,6 @@
   - `memory/plan.md`、`memory/progress.md`、`memory/verify.md`、`memory/gotchas.md`
   - `context/2026/09/30/11-07-15/对话.md`
 
-- **Git 提交**：待提交。
+- **Git 提交**：`0497f44 fix: support Things3 configuration for empty repositories`，已推送至 `origin/main`。
 
 ---
