@@ -1,5 +1,10 @@
 # HappaTools Implementation Plan
 
+## 2026-10-01 README 默认屏蔽教程项目
+
+- 仅在README概览中排除项目名称精确为“Things Mac 概览”或“了解 Things for iPhone”的任务；所有同名项目均生效，统计、未完成和最近完成保持同一范围。详细导出保留，同名领域或独立任务不受影响。
+- 在既有overview入口统一过滤，不新增设置或依赖。先用真实SQLite样本覆盖重复名称、完成/取消状态、同名领域和任务，再运行全部共享测试、构建、应用烟测，沿用已批准的安装与Things3-sync同步授权。
+
 ## 2026-10-01 Things3 仓库任务概览
 
 - 在 Things3 导出仓库根目录自动生成 README.md，每次同步更新；源码仓库 README 保留用途。

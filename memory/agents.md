@@ -1,5 +1,7 @@
 # 开发环境
 
+- 2026-10-01 教程项目屏蔽：仅主代理；复用README overview、SQLite样本、Swift Set及既有应用/Git同步，无新依赖；沿用本会话明确批准的安装和Things3-sync上传授权，不截图。
+
 - 2026-10-01 Things3 README：仅主代理；复用 Swift/Foundation、SQLite 快照、既有导出所有权与 Git 同步，无新增依赖；真实 SQLite、Git 及应用烟测，不截图。
 
 - 2026-10-01 窗口与 Dock：仅主代理；复用 AppKit 窗口通知、Combine 和既有 FinderOperationSmoke，无新增依赖；不截图，产物放在 .build。

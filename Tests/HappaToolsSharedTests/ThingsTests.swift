@@ -95,6 +95,28 @@ final class ThingsTests: XCTestCase {
         XCTAssertTrue(empty.contains("暂无已完成任务"))
     }
 
+    func testReadmeHidesTutorialProjectsButPreservesDetailedExport() throws {
+        let root = try TestSupport.temporaryDirectory()
+        let db = try copyDatabase(to: root)
+        try sql("UPDATE TMTask SET title='Things Mac 概览' WHERE uuid='TCozQqXVbB2TJkXXXQj2H9'; UPDATE TMTask SET title='了解 Things for iPhone' WHERE uuid IN ('3x1QqJqfvZyhtw8NSdnZqG','PgsWnDkzXRz6zvofTqtHqn'); UPDATE TMTask SET project='PgsWnDkzXRz6zvofTqtHqn',title='重复教程任务' WHERE uuid='DfYoiXcNLQssk9DkSoJV3Y'; UPDATE TMArea SET title='Things Mac 概览' WHERE title='Area 1'; UPDATE TMTask SET title='了解 Things for iPhone' WHERE uuid='5pUx6PESj3ctFYbgth1PXY'", at: db)
+        let snapshot = try ThingsReader.read(at: db)
+        let output = try ThingsExport.render(snapshot)
+        let readme = try XCTUnwrap(output.files["README.md"])
+        XCTAssertFalse(readme.contains("### 项目：Things Mac 概览"))
+        XCTAssertFalse(readme.contains("### 项目：了解 Things for iPhone"))
+        XCTAssertFalse(readme.contains("重复教程任务"))
+        XCTAssertTrue(readme.contains("### 领域：Things Mac 概览"))
+        XCTAssertTrue(readme.contains("[了解 Things for iPhone]("))
+        XCTAssertTrue(readme.contains("未完成 **9** · 已完成 **8** · 已取消 **8**"))
+        let hiddenIDs = ["TCozQqXVbB2TJkXXXQj2H9", "3x1QqJqfvZyhtw8NSdnZqG", "PgsWnDkzXRz6zvofTqtHqn"]
+        for task in snapshot.tasks where task["type"] == "0" && hiddenIDs.contains(task["project"] ?? "") {
+            XCTAssertFalse(readme.contains("[\(task["title"]!)]("))
+            let directory = try XCTUnwrap(output.containers[task["project"]!])
+            let name = ["0": "tasks", "2": "已取消", "3": "已完成"][task["status"]!]!
+            XCTAssertTrue(try XCTUnwrap(output.files[directory + "/" + name + ".md"]).contains(task["title"]!))
+        }
+    }
+
     func testEmptyRepositoryFirstUploadPreservesUserStaging() throws {
         let base = try TestSupport.temporaryDirectory()
         let root = base.appendingPathComponent("repo")

@@ -368,3 +368,23 @@
 - **Git 提交**：`6426684 feat: export Things3 task overview README`，已普通推送至`origin/main`。
 
 ---
+
+## [2026-10-01 15:29] README 默认屏蔽 Things 教程项目
+
+- **需求/问题描述**：
+  > 去掉Things Mac 概览和了解 Things for iPhone项目，默认屏蔽，包含重复的同名项目。
+
+- **实际实现的功能与改动**：
+  - [默认筛选]：在README overview入口按项目名称筛选UUID，所有同名教程项目任务从首页统计、未完成及最近完成中排除。保留完整详细导出，同名领域或独立任务不受影响；无新增设置、依赖或接口。
+  - [测试/验证]：真实SQLite回归先失败后通过，36/36共享测试、Release构建/临时签名、ThingsAppSmoke及diff检查通过。
+  - [安装与同步]：旧版ZIP完整校验后更新安装版，签名、主程序/framework一致性通过；沿用本会话用户明确授权。Things3-sync提交`7dd1401 chore: sync Things3`与GitHub远端一致，唯一改动README；未完成任务从118项减少到34项，最近完成20项保持，详细Projects文件hash完全不变。无视觉验收。
+
+- **涉及文件**：
+  - `Shared/Things/ThingsExport.swift` (+4 / -0)、`Tests/HappaToolsSharedTests/ThingsTests.swift` (+22 / -0)
+  - `docs/THINGS3.md`、`docs/VALIDATION.md`、`docs/CHANGELOG.md`
+  - `memory/agents.md`、`memory/plan.md`、`memory/progress.md`、`memory/verify.md`、`memory/gotchas.md`
+  - `context/2026/10/01/15-29-24/对话.md`
+
+- **Git 提交**：待提交。
+
+---

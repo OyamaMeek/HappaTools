@@ -2,6 +2,13 @@
 
 更新时间：2026-10-01。以下结果来自当前工作区和本机已安装的 `/Applications/HappaTools.app`。
 
+## 2026-10-01 README 默认屏蔽教程项目
+
+- README默认排除名称精确为“Things Mac 概览”和“了解 Things for iPhone”的项目任务，统计、未完成及最近完成统一筛选；同名领域或独立任务保持显示，所有详细文件保留。
+- 新增真实SQLite回归先失败后通过，覆盖多个同名项目、完成/取消任务与完整导出保留；36/36共享测试、Release构建/临时签名、ThingsAppSmoke和diff检查通过。
+- 旧版ZIP`.build/HappaTools-before-tutorial-filter-20261001.zip`完整校验通过；安装签名、主程序及framework逐字节一致。沿用本会话明确批准的安装和Things3-sync同步授权。
+- 实际Things3-sync提交`7dd1401`与GitHub远端main一致，唯一改动README；教程项目分组已消失，未完成任务从118项变为34项，底部保留最近完成20项。详细Projects文件hash与修改前完全一致。未执行截图或视觉验收。
+
 ## 2026-10-01 Things3 仓库任务概览
 
 - 新增自动导出的根README：未完成任务每项一次、按归属分组、显示日期及详情链接；最近完成20项在最后，取消任务不计入完成记录。

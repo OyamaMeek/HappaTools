@@ -73,6 +73,10 @@ public enum ThingsExport {
     }
 
     private static func overview(_ tasks: [[String: String]], paths: [String: String], entities: [String: [String: String]]) -> String {
+        let hiddenProjects = Set(entities.values.filter {
+            $0["type"] == "1" && ["Things Mac 概览", "了解 Things for iPhone"].contains($0["title"] ?? "")
+        }.map { $0["uuid"]! })
+        let tasks = tasks.filter { !hiddenProjects.contains($0["project"] ?? "") }
         let pending = tasks.filter { $0["status"] == "0" }
         let completed = tasks.filter { $0["status"] == "3" }.sorted {
             let left = $0["stopped"] ?? ""
