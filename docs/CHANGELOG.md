@@ -403,6 +403,6 @@
   - `memory/progress.md`、`memory/verify.md`、`docs/CHANGELOG.md`
   - `context/2026/10/01/19-30-01/对话.md`
 
-- **Git 提交**：待提交。
+- **Git 提交**：`8f6e961 docs: record rebuilt local DMG verification`，已普通推送至 `origin/main`。
 
 ---

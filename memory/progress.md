@@ -5,7 +5,7 @@
 - [x] 运行既有 `scripts/package.sh`，Release 构建与临时签名通过；沙盒限制应用复制后，在获准的沙盒外执行成功。
 - [x] 新生成 `dist/HappaTools-local.dmg`（1852075 字节）；镜像校验、只读挂载后包内签名、主程序和说明文件一致性、Applications 链接检查通过，主程序包含 x86_64 / arm64；已卸载镜像。未公证，未安装。
 - [x] Xcode 打包流程未使用 UPX，无 PyInstaller 命令可添加 `--noupx`；未修改构建脚本。
-- [ ] 保存日志和对话后提交、普通推送至 `origin/main`。
+- [x] 日志与对话已保存；提交 `8f6e961 docs: record rebuilt local DMG verification` 已普通推送至 `origin/main`。
 
 ## 2026-10-01 README 默认屏蔽教程项目
 
