@@ -1,5 +1,7 @@
 # 开发环境
 
+- 2026-10-01 Things3 README：仅主代理；复用 Swift/Foundation、SQLite 快照、既有导出所有权与 Git 同步，无新增依赖；真实 SQLite、Git 及应用烟测，不截图。
+
 - 2026-10-01 窗口与 Dock：仅主代理；复用 AppKit 窗口通知、Combine 和既有 FinderOperationSmoke，无新增依赖；不截图，产物放在 .build。
 
 - 2026-10-01 README 无弹窗创建：仅主代理；复用 Swift / AppKit 和既有 FinderOperationSmoke、PromptSmoke、共享测试，无新增依赖；测试产物放在 .build，不截图。

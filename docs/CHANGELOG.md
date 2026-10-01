@@ -346,3 +346,25 @@
 - **Git 提交**：`3c5c659 fix: manage Dock visibility with application windows`，已推送至 `origin/main`。
 
 ---
+
+## [2026-10-01 15:20] Things3 导出仓库 README 任务概览
+
+- **需求/问题描述**：
+  > 在Things3同步仓库根目录生成README.md，直观看出未完成任务，最下面展示最近完成的任务。
+
+- **实际实现的功能与改动**：
+  - [任务概览]：每次导出生成README，统计任务数量，全部未完成任务按项目、领域和清单分组，显示日期及详情链接；最后展示按完成时间倒序排列的最近20项，取消任务不计入完成记录，缺失完成时间明确标注。
+  - [文件与Git保护]：复用托管文件标识、路径校验、幂等写入与选择性提交；陌生README在写入前拒绝，大小写重命名后的详情链接沿用实际目录。
+  - [测试/验证]：目标回归先失败后通过，35/35共享测试、ThingsAppSmoke、Release构建、临时签名及diff检查通过；本地bare远端README与导出逐字一致，重复同步不提交。真实数据库导出189个任务、33个托管路径。无截图或视觉验收。
+  - [安装与实际同步]：自动审批最初拒绝安装启动及向具体远端发送个人任务，用户随后明确批准。旧版ZIP备份校验后更新启动安装版，签名和主程序/framework一致性通过；系统隐私提示后应用日志记录上传成功。Things3-sync提交`044a2ad chore: sync Things3`与GitHub远端一致；118项未完成、底部20项近期完成及143个链接校验通过，重复同步无新提交。
+
+- **涉及文件**：
+  - `Shared/Things/ThingsExport.swift` (+54 / -0)、`Shared/Things/ThingsFiles.swift` (+3 / -1)
+  - `Tests/HappaToolsSharedTests/ThingsTests.swift` (+66 / -1)、`Tests/ThingsAppSmoke/main.swift` (+4 / -0)
+  - `docs/THINGS3.md`、`docs/VALIDATION.md`、`docs/CHANGELOG.md`
+  - `memory/agents.md`、`memory/plan.md`、`memory/progress.md`、`memory/verify.md`
+  - `context/2026/10/01/15-20-41/对话.md`
+
+- **Git 提交**：待提交。
+
+---

@@ -42,6 +42,8 @@ extension ThingsExport {
                         desired[oldDirectory + "/" + name] = desired.removeValue(forKey: directory + "/" + name)
                     }
                     containers[id] = oldDirectory
+                    desired["README.md"] = desired["README.md"]?.replacingOccurrences(
+                        of: "](" + linkPath(directory) + "/", with: "](" + linkPath(oldDirectory) + "/")
                 }
             }
         }
@@ -97,7 +99,7 @@ extension ThingsExport {
     private static func validateExportPath(_ path: String) throws {
         var parts = path.components(separatedBy: "/")
         if parts.first == "Archived" { parts.removeFirst() }
-        let top = ["Inbox.md", "Today.md", "Anytime.md", "Someday.md", "Upcoming.md", "已完成.md", "已取消.md"]
+        let top = ["README.md", "Inbox.md", "Today.md", "Anytime.md", "Someday.md", "Upcoming.md", "已完成.md", "已取消.md"]
         guard (parts.count == 1 && !path.hasPrefix("Archived/") && top.contains(path))
             || (parts.count == 3 && ["Projects", "Areas"].contains(parts[0])
                 && !parts[1].isEmpty && ![".", "..", ".git"].contains(parts[1].lowercased())

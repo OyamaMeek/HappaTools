@@ -33,6 +33,7 @@ public enum ThingsExport {
         formatter.dateFormat = "yyyy-MM-dd"
         let today = formatter.string(from: now)
         let tasks = snapshot.tasks.filter { $0["type"] == "0" }
+        var taskPaths: [String: String] = [:]
         for task in tasks {
             let directory = (task["project"].flatMap { containers[$0] } ?? task["area"].flatMap { containers[$0] })
             let name: String
@@ -43,6 +44,7 @@ public enum ThingsExport {
                 name = directory == nil ? (["0": "Inbox", "1": "Anytime", "2": "Someday"][task["start"] ?? ""] ?? "Inbox") : "tasks"
             }
             let path = directory.map { $0 + "/" + name + ".md" } ?? name + ".md"
+            taskPaths[task["uuid"]!] = path
             files[path, default: marker + "# " + name + "\n\n"] += block(task, entities: entities, tags: tags, checklist: checklist)
         }
         let byToday = tasks.sorted {
@@ -62,7 +64,59 @@ public enum ThingsExport {
                 files["Upcoming.md"]! += block(task, entities: entities, tags: tags, checklist: checklist)
             }
         }
+        files["README.md"] = overview(tasks, paths: taskPaths, entities: entities)
         return ThingsRendered(files: files, containers: containers)
+    }
+
+    static func linkPath(_ path: String) -> String {
+        path.addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~/"))!
+    }
+
+    private static func overview(_ tasks: [[String: String]], paths: [String: String], entities: [String: [String: String]]) -> String {
+        let pending = tasks.filter { $0["status"] == "0" }
+        let completed = tasks.filter { $0["status"] == "3" }.sorted {
+            let left = $0["stopped"] ?? ""
+            let right = $1["stopped"] ?? ""
+            return left == right ? $0["uuid"]! < $1["uuid"]! : left > right
+        }
+        var text = marker + "# Things3 任务概览\n\n"
+        text += "未完成 **\(pending.count)** · 已完成 **\(completed.count)** · 已取消 **\(tasks.filter { $0["status"] == "2" }.count)**\n\n"
+        text += "[今天](Today.md) · [即将到来](Upcoming.md) · [收件箱](Inbox.md) · [随时](Anytime.md) · [某天](Someday.md)\n\n"
+        text += "随 Things3 同步自动更新；点击任务名称查看详情。\n\n## 未完成任务\n\n"
+        let groups = Dictionary(grouping: pending, by: { paths[$0["uuid"]!]! })
+        func entry(_ task: [String: String], completed: Bool) -> String {
+            let path = paths[task["uuid"]!]!
+            var result = "- [\(completed ? "x" : " ")] [\(line(task["title"] ?? ""))](\(linkPath(path)))"
+            if completed {
+                result += " · " + (task["stopped"].map { "完成于 " + line($0) } ?? "完成时间未记录")
+                if let parent = task["project"] ?? task["area"], let entity = entities[parent] {
+                    result += " · " + line(entity["title"] ?? "")
+                }
+            } else {
+                for (key, label) in [("start_date", "开始"), ("deadline", "截止")] {
+                    if let date = task[key] { result += " · \(label) \(line(date))" }
+                }
+                if task["start"] == "2" && task["start_date"] == nil { result += " · 某天" }
+            }
+            return result + "\n"
+        }
+        for path in groups.keys.sorted() {
+            let rows = groups[path]!
+            let first = rows[0]
+            let label: String
+            if path.hasPrefix("Projects/"), let project = first["project"].flatMap({ entities[$0] }) {
+                label = "项目：" + (project["title"] ?? "")
+            } else if path.hasPrefix("Areas/"), let area = first["area"].flatMap({ entities[$0] }) {
+                label = "领域：" + (area["title"] ?? "")
+            } else {
+                label = ["Inbox.md": "收件箱", "Anytime.md": "随时", "Someday.md": "某天"][path] ?? path
+            }
+            text += "### \(line(label))（\(rows.count)）\n\n" + rows.map { entry($0, completed: false) }.joined() + "\n"
+        }
+        if pending.isEmpty { text += "暂无未完成任务。\n\n" }
+        text += "## 最近完成\n\n最近完成的 20 项任务，按完成时间从新到旧排列。\n\n"
+        text += completed.isEmpty ? "暂无已完成任务。\n" : completed.prefix(20).map { entry($0, completed: true) }.joined()
+        return text
     }
 
     private static func line(_ value: String) -> String {

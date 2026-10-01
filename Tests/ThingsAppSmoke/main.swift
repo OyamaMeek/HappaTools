@@ -45,6 +45,10 @@ assert(FileManager.default.fileExists(atPath: repo.appendingPathComponent("Inbox
 let head = try git.run(["rev-parse", "HEAD"], at: repo).stdout
 let remoteHead = try git.run(["rev-parse", "refs/heads/main"], at: remote).stdout
 assert(head == remoteHead)
+let readme = try String(contentsOf: repo.appendingPathComponent("README.md"), encoding: .utf8)
+assert(readme.contains("## 未完成任务") && readme.contains("## 最近完成"))
+let uploadedReadme = try git.run(["show", "main:README.md"], at: remote).stdout
+assert(uploadedReadme == readme, "README必须经应用同步上传到远端")
 controller.setAutomatic(false)
 let reopened = ThingsController(settings: settings, logURL: root.appendingPathComponent("history.sqlite"))
 assert(!reopened.configuration.enabled && reopened.configuration.target == controller.configuration.target)

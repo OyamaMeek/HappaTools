@@ -44,6 +44,57 @@ final class ThingsTests: XCTestCase {
         XCTAssertEqual(output.files, try ThingsExport.render(ThingsReader.read(at: Self.fixture)).files)
     }
 
+    func testReadmeSummarizesTasksAndLinksToExportedFiles() throws {
+        let root = try TestSupport.temporaryDirectory()
+        let snapshot = try ThingsReader.read(at: Self.fixture)
+        let output = try ThingsExport.render(snapshot)
+        let readme = try XCTUnwrap(output.files["README.md"])
+        XCTAssertTrue(readme.contains("未完成 **15**"))
+        XCTAssertTrue(readme.contains("已完成 **12**"))
+        XCTAssertTrue(readme.contains("已取消 **10**"))
+        let sections = readme.components(separatedBy: "## 最近完成")
+        XCTAssertEqual(sections.count, 2)
+        let pending = sections[0]
+        XCTAssertEqual(pending.components(separatedBy: "- [ ] ").count - 1, 15)
+        for task in snapshot.tasks where task["type"] == "0" && task["status"] == "0" {
+            XCTAssertEqual(pending.components(separatedBy: "[\(task["title"]!)](").count - 1, 1)
+        }
+        XCTAssertFalse(pending.contains("Completed To-Do"))
+        XCTAssertFalse(pending.contains("Cancelled To-Do"))
+        XCTAssertTrue(pending.contains("Project without Area"))
+        XCTAssertTrue(pending.contains("Area 1"))
+        XCTAssertEqual(sections[1].components(separatedBy: "- [x] ").count - 1, 12)
+        XCTAssertFalse(sections[1].contains("\n## "))
+        let paths = try ThingsExport.reconcile(output, at: root)
+        XCTAssertTrue(paths.contains("README.md"))
+        let pattern = try NSRegularExpression(pattern: #"\]\(([^)]+)\)"#)
+        for match in pattern.matches(in: readme, range: NSRange(readme.startIndex..., in: readme)) {
+            let range = try XCTUnwrap(Range(match.range(at: 1), in: readme))
+            let path = try XCTUnwrap(String(readme[range]).removingPercentEncoding)
+            XCTAssertTrue(FileManager.default.fileExists(atPath: root.appendingPathComponent(path).path), path)
+        }
+    }
+
+    func testReadmeRecentCompletionLimitEscapingAndEmptyState() throws {
+        let root = try TestSupport.temporaryDirectory()
+        let db = try copyDatabase(to: root)
+        try sql("UPDATE TMTask SET status=3,stopDate=rowid WHERE type=0; UPDATE TMTask SET stopDate=1700000000 WHERE uuid='LgqUAQAdNsS3CGHok4EjLa'; UPDATE TMTask SET stopDate=1700000001 WHERE uuid='56dtXSk3A373M6n4eqGyr3'; UPDATE TMTask SET stopDate=NULL WHERE uuid='LE2WEGxANmtHWD3c9g5iWA'; UPDATE TMTask SET status=0,title='待办 [特殊] #标题' WHERE uuid='DfYoiXcNLQssk9DkSoJV3Y'; UPDATE TMTask SET title='项目 (中文)' WHERE uuid='TCozQqXVbB2TJkXXXQj2H9'", at: db)
+        let output = try ThingsExport.render(ThingsReader.read(at: db))
+        let readme = try XCTUnwrap(output.files["README.md"])
+        XCTAssertTrue(readme.contains(##"待办 \[特殊\] \#标题"##))
+        let recent = try XCTUnwrap(readme.components(separatedBy: "## 最近完成").last)
+        XCTAssertEqual(recent.components(separatedBy: "- [x] ").count - 1, 20)
+        let newest = try XCTUnwrap(recent.range(of: "Completed To-Do in Today"))
+        let older = try XCTUnwrap(recent.range(of: "Completed To-Do in Inbox"))
+        XCTAssertLessThan(newest.lowerBound, older.lowerBound)
+        XCTAssertFalse(recent.contains("Completed To-Do in Upcoming"))
+        XCTAssertTrue(readme.contains("%20%28"))
+        try sql("UPDATE TMTask SET trashed=1", at: db)
+        let empty = try XCTUnwrap(ThingsExport.render(ThingsReader.read(at: db)).files["README.md"])
+        XCTAssertTrue(empty.contains("暂无未完成任务"))
+        XCTAssertTrue(empty.contains("暂无已完成任务"))
+    }
+
     func testEmptyRepositoryFirstUploadPreservesUserStaging() throws {
         let base = try TestSupport.temporaryDirectory()
         let root = base.appendingPathComponent("repo")
@@ -79,6 +130,7 @@ final class ThingsTests: XCTestCase {
         XCTAssertFalse(try TestSupport.git(["ls-tree", "-r", "--name-only", "HEAD"], at: root).contains("personal.txt"))
         XCTAssertEqual(try TestSupport.git(["rev-parse", "HEAD"], at: root), try TestSupport.git(["rev-parse", "@{upstream}"], at: root))
         XCTAssertEqual(try ThingsSyncTarget.capture(at: root, executor: executor), target)
+        XCTAssertTrue(try TestSupport.git(["show", "HEAD:README.md"], at: root).contains("## 最近完成"))
         XCTAssertFalse(try sync.run(database: Self.fixture, target: target).committed)
     }
 
@@ -103,6 +155,11 @@ final class ThingsTests: XCTestCase {
     func testUnownedFilesAndSymlinksBlockBeforeWriting() throws {
         let root = try TestSupport.temporaryDirectory()
         let output = try ThingsExport.render(ThingsReader.read(at: Self.fixture))
+        try Data("user readme".utf8).write(to: root.appendingPathComponent("README.md"))
+        XCTAssertThrowsError(try ThingsExport.reconcile(output, at: root))
+        XCTAssertEqual(try String(contentsOf: root.appendingPathComponent("README.md")), "user readme")
+        XCTAssertFalse(FileManager.default.fileExists(atPath: root.appendingPathComponent("Inbox.md").path))
+        try FileManager.default.removeItem(at: root.appendingPathComponent("README.md"))
         try Data("user notes".utf8).write(to: root.appendingPathComponent("Today.md"))
         XCTAssertThrowsError(try ThingsExport.reconcile(output, at: root))
         XCTAssertFalse(FileManager.default.fileExists(atPath: root.appendingPathComponent("Inbox.md").path))
@@ -129,11 +186,19 @@ final class ThingsTests: XCTestCase {
     func testCaseOnlyRenameAndChecklistCompletionDate() throws {
         let root = try TestSupport.temporaryDirectory()
         let db = try copyDatabase(to: root)
-        _ = try ThingsExport.reconcile(ThingsExport.render(ThingsReader.read(at: db)), at: root)
+        let original = try ThingsExport.render(ThingsReader.read(at: db))
+        _ = try ThingsExport.reconcile(original, at: root)
         try sql("UPDATE TMTask SET title=lower(title) WHERE type=1; UPDATE TMChecklistItem SET status=3,stopDate=1234567890 WHERE title='Item 2'", at: db)
         let output = try ThingsExport.render(ThingsReader.read(at: db))
         XCTAssertTrue(output.files["Inbox.md"]!.contains("完成/取消时间"))
         XCTAssertNoThrow(try ThingsExport.reconcile(output, at: root))
+        let readme = try String(contentsOf: root.appendingPathComponent("README.md"))
+        let pattern = try NSRegularExpression(pattern: #"\]\(([^)]+)\)"#)
+        for match in pattern.matches(in: readme, range: NSRange(readme.startIndex..., in: readme)) {
+            let range = try XCTUnwrap(Range(match.range(at: 1), in: readme))
+            let path = try XCTUnwrap(String(readme[range]).removingPercentEncoding)
+            XCTAssertNotNil(original.files[path], path)
+        }
     }
 
     func testFailedCommitRetriesPreviouslyStagedDeletions() throws {
