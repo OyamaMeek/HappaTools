@@ -260,6 +260,6 @@
   - `Tests/MenuSmoke/main.swift`、`Tests/FinderOperationSmoke/main.swift`、`Tests/ITermSmoke/main.swift`、`Tests/HappaToolsSharedTests/FinderRequestTests.swift`
   - `README.md`、`docs/VALIDATION.md`、`docs/CHANGELOG.md`、`memory/`、`context/2026/10/01/10-30-39/对话.md`
 
-- **Git 提交**：待提交。
+- **Git 提交**：`d32d5de feat: open iTerm2 from Finder current folder`，已推送至 `origin/main`。
 
 ---
