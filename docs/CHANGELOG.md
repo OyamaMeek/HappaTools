@@ -272,7 +272,7 @@
 - **实际实现的功能与改动**：
   - [权限探测]：移除启动和概览重新检查中的 Mail 目录读取，直接提示用户在系统设置确认授权。
   - [构建签名]：优先选择本机开发身份，支持 CODE_SIGN_IDENTITY，并检查 Apple 在线信任和吊销状态；无证书时明确说明临时签名限制，撤销证书返回失败。
-  - [测试/验证]：权限状态先失败后通过，33/33 共享测试、FinderOperationSmoke、Debug/Release 构建及脚本语法检查通过。跨构建身份兼容检查通过后，在线验证和真实启动揭示本机两张证书均已撤销；最终脚本明确指定撤销身份返回失败。稳定签名与长期无弹窗尚未通过，等待用户重新生成证书及确认系统授权。
+  - [测试/验证]：权限状态先失败后通过，33/33 共享测试、FinderOperationSmoke、Debug/Release 构建及脚本语法检查通过。跨构建身份兼容检查通过后，实际签名证书在线验证返回已撤销，AMFI 拒绝启动；本地列表中另一证书也显示已撤销。最终脚本明确指定撤销身份返回失败。稳定签名与长期无弹窗尚未通过，等待用户重新生成证书及确认系统授权。
   - [本机更新]：安装可运行的临时签名修复版，主程序及 Git 扩展启动，两个扩展注册，安装主程序和 Git 扩展与 Release 产物一致。旧版 ZIP 备份已校验；未修改 TCC 授权或钥匙串，未执行视觉检查。
 
 - **涉及文件**：
@@ -282,6 +282,6 @@
   - `memory/agents.md`、`memory/plan.md`、`memory/progress.md`、`memory/verify.md`、`memory/gotchas.md`
   - `context/2026/10/01/10-53-49/对话.md`
 
-- **Git 提交**：待提交。
+- **Git 提交**：`b9ed926 fix: avoid unrelated privacy probes and validate signing certificates`，已推送至 `origin/main`。
 
 ---

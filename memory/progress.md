@@ -2,12 +2,13 @@
 
 ## 2026-10-01 反复请求 App 数据权限
 
-- [x] 检查截图、TCC 日志及 Apple 说明，确认旧授权 cdhash 不匹配与启动时 Mail 探测；本机两张开发证书均被 Apple 撤销，security verify-cert 返回 CSSMERR_TP_CERT_REVOKED。
+- [x] 检查截图、TCC 日志及 Apple 说明，确认旧授权 cdhash 不匹配与启动时 Mail 探测；实际签名证书在线验证返回 CSSMERR_TP_CERT_REVOKED，另一开发身份也显示已撤销。
 - [x] 权限状态失败回归先复现再通过；移除 Mail 探测，构建支持证书身份并明确拒绝信任检查失败。
 - [x] 33/33 共享测试、FinderOperationSmoke 通过。Debug/Release 构建完成；证书签名的跨版本身份兼容，但在线信任及真实启动被撤销证书拒绝，不能视为有效签名验收通过。
 - [x] 安装可运行的临时签名修复版，主应用及 Git 扩展已启动，两个扩展已注册，安装主程序与 Git 扩展一致；旧版备份 `.build/HappaTools-before-privacy-fix-20261001.zip`。
 - [ ] 稳定签名与更新后授权持久性：等待用户在 Xcode 重新生成有效 Apple Development 证书；已向用户说明操作。临时签名仍可能在更新或重启后请求权限，不声称反复弹窗已全部消失。
-- [ ] 保存开发日志和对话，提交并普通推送。
+- [ ] 用户重新添加安装版的完整磁盘访问授权，旧记录与新临时签名的身份不同；不代为点击或修改权限数据库。
+- [x] 开发日志及对话已保存；修复提交 `b9ed926` 已普通推送至 `origin/main`。
 
 ## 2026-10-01 Finder 打开 iTerm2
 
