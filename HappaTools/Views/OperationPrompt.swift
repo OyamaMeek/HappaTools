@@ -23,6 +23,7 @@ enum OperationPrompt {
 
     static func commitMessage(at directory: URL) -> String? {
         let alert = NSAlert()
+        alert.icon = NSImage(size: NSSize(width: 1, height: 1))
         alert.messageText = "提交并推送"
         alert.informativeText = "\(directory.path)\n将暂存整个仓库的全部更改，提交后推送到当前分支的上游。"
         alert.addButton(withTitle: "提交并推送")

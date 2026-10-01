@@ -5,12 +5,20 @@ app.setActivationPolicy(.regular)
 app.finishLaunching()
 let directory = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
 
+func hasVisibleIcon(in view: NSView) -> Bool {
+    if let imageView = view as? NSImageView, !imageView.isHidden, let image = imageView.image {
+        return image.size.width > 1 || image.size.height > 1
+    }
+    return view.subviews.contains(where: hasVisibleIcon)
+}
+
 for replacement in [nil, "修复输入\n保留多行说明"] as [String?] {
     var initialMessage = ""
     let timer = Timer(timeInterval: 0.1, repeats: false) { _ in
         guard let editor = app.modalWindow?.firstResponder as? NSTextView else {
             fatalError("提交框打开后必须聚焦文本编辑器")
         }
+        assert(!hasVisibleIcon(in: app.modalWindow!.contentView!), "提交弹窗不得显示顶部图标")
         initialMessage = editor.string
         assert(!initialMessage.isEmpty)
         assert(editor.selectedRange() == NSRange(location: 0, length: (initialMessage as NSString).length),
@@ -41,4 +49,4 @@ let cancel = Timer(timeInterval: 0.1, repeats: false) { _ in
 }
 RunLoop.main.add(cancel, forMode: .modalPanel)
 assert(OperationPrompt.commitMessage(at: directory) == nil)
-print("提交框检查通过：日期全选、直接替换、多行输入、保留默认日期、取消和深浅色光标对比。")
+print("提交框检查通过：无顶部图标、日期全选、直接替换、多行输入、保留默认日期、取消和深浅色光标对比。")

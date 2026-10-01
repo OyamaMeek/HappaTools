@@ -1,5 +1,7 @@
 # 开发环境
 
+- 2026-10-01 光标持续显示排查：仅主代理；AppKit 原生窗口、现有 PromptSmoke 和 Apple 文档，测试产物放在忽略的 .build；未授权截图，不进行视觉检查。
+
 - 2026-10-01 权限弹窗：仅主代理；系统 log 和 codesign 定位，复用本机 Apple Development 身份签名，不导出私钥、不改 TCC 数据库；既有 AppKit 与跨构建签名烟测验证。
 
 - 2026-10-01 iTerm2 菜单：仅主代理实施；Swift / AppKit、系统 osascript 和 iTerm2 AppleScript 接口，不增加依赖。验证使用真实 iTerm2、既有 Swift 测试和 AppKit 烟测，不截图。

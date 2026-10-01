@@ -285,3 +285,25 @@
 - **Git 提交**：`b9ed926 fix: avoid unrelated privacy probes and validate signing certificates`，已推送至 `origin/main`。
 
 ---
+
+## [2026-10-01 14:21] 去掉提交弹窗顶部图标并排查光标
+
+- **需求/问题描述**：
+  > 用户报告光标不能长时间显示，随后要求去掉提交弹窗顶部图标。
+
+- **实际实现的功能与改动**：
+  - [弹窗图标]：通过 NSAlert 的原生空图像去掉提交弹窗顶部应用图标，保留既有输入和按钮。
+  - [测试/验证]：顶部图标回归失败→通过；PromptSmoke 日期全选、替换、多行、默认值、取消和深浅色光标检查通过；33/33共享测试、FinderOperationSmoke、Release构建、签名完整性和diff检查通过。共享测试及Finder烟测的沙盒限制通过在沙盒外重跑解决。无视觉验收。
+  - [本机更新]：ZIP备份已校验，更新启动 `/Applications/HappaTools.app`，主程序与Release产物逐字节一致；沿用临时签名。
+  - [光标排查]：真实AppKit循环检查至65秒，失去窗口活动后系统隐藏光标；尚未复现活动窗口中静置消失，未修改光标行为，等待用户说明现象或确认持续可见偏好。
+
+- **涉及文件**：
+  - `HappaTools/Views/OperationPrompt.swift` (+1 / -0)
+  - `Tests/PromptSmoke/main.swift` (+9 / -1)
+  - `docs/VALIDATION.md`、`docs/CHANGELOG.md`
+  - `memory/agents.md`、`memory/plan.md`、`memory/progress.md`、`memory/verify.md`
+  - `context/2026/10/01/14-21-05/对话.md`
+
+- **Git 提交**：待提交。
+
+---
