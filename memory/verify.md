@@ -1,5 +1,12 @@
 # 验证标准
 
+## 2026-10-01 概览介绍与自动 Dock 显示
+
+- FinderOperationSmoke 使用真实 NSWindow，验证无窗口 accessory、打开 regular、多窗口关闭其中一个仍 regular、最后关闭 accessory、重开 regular、最小化保留图标，以及关闭后主循环继续运行且 delegate 明确拒绝自动退出。
+- 既有 README/Git 取消、失败及返回 Finder 的检查继续通过；共享测试与 Release 构建通过。
+- 概览文案与设置页内容核对；安装前备份，校验安装签名和二进制一致性。不截图，不声称视觉验收。
+- 结果：旧源码在完整 AppKit 主循环下目标断言失败，修复后全部 FinderOperationSmoke 检查及33/33共享测试通过。Release 构建、安装签名、主程序/framework一致性及实际安装版 regular → accessory → regular 通过，同一PID 52736持续运行。关闭按钮辅助功能自动化未通过权限检查；安装版关闭行为通过真实 README URL 操作验证。
+
 ## 2026-10-01 README 无弹窗创建
 
 - 通过 AppModel.handle 真实创建空 README，检测全部 modal，确认零弹窗、窗口关闭及忙碌状态释放。

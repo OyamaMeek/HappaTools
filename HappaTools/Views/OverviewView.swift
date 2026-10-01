@@ -8,7 +8,7 @@ struct OverviewView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 22) {
                 Label("HappaTools", systemImage: "leaf.fill").font(.largeTitle)
-                Text("在 Finder 中提交与推送 Git 更改，或创建 README.md。")
+                Text("Happa自用的小工具集")
                     .font(.title3).foregroundColor(.secondary)
                 Divider()
                 Label(model.extensionEnabled ? "Git 扩展已启用" : "Git 扩展尚未启用", systemImage: model.extensionEnabled ? "checkmark.circle.fill" : "exclamationmark.circle")

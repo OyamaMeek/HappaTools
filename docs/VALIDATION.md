@@ -2,6 +2,14 @@
 
 更新时间：2026-10-01。以下结果来自当前工作区和本机已安装的 `/Applications/HappaTools.app`。
 
+## 2026-10-01 概览介绍与自动 Dock 显示
+
+- 概览改为“Happa自用的小工具集”，Dock 随窗口显示与关闭自动切换；移除固定开关和配置接口，保留最小化、多窗口及主动退出时的同步收尾。
+- FinderOperationSmoke 改为真实 NSApplication.run 主循环；变更前源码目标断言失败，修复后无窗口隐藏、显示/重开、多窗口、最小化、关闭后后台主循环、README/Git取消和失败、防重入全部通过。33/33共享测试通过。
+- 窗口更新采用系统 [didUpdateNotification](https://developer.apple.com/documentation/appkit/nsapplication/didupdatenotification)，关闭通知中排除即将关闭的窗口；delegate [明确保留后台运行](https://developer.apple.com/documentation/appkit/nsapplicationdelegate/applicationshouldterminateafterlastwindowclosed(_:))。
+- Release 构建、签名完整性及 diff 检查通过；仍有既有 AppIntents/扩展版本号警告。旧安装版 ZIP `.build/HappaTools-before-dock-20261001.zip` 校验通过，安装主程序及 framework 与产物逐字节一致，沿用临时签名。
+- 实际安装版使用 Finder 相同的 Launch Services URL 入口在隔离 `.build/dock-installed-readme-20261001` 创建零字节 README：显示时策略 regular（0），窗口关闭后 accessory（1），从应用程序重新打开恢复 regular（0），主进程 PID 52736 全程保持。直接关闭按钮的自动化检查因 osascript 缺少辅助功能权限未完成；未修改系统权限、未截图或进行视觉验收。
+
 ## 2026-10-01 README 无弹窗创建
 
 - FinderOperationSmoke 通过实际 AppModel.handle 创建空 README，检测 modal 数量；零弹窗断言先失败，修复后 Debug / Release framework 两次检查通过，成功后关闭主窗口并释放忙碌状态。

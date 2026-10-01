@@ -1,5 +1,11 @@
 # HappaTools Implementation Plan
 
+## 2026-10-01 概览介绍与自动 Dock 显示
+
+- 概览介绍改为“Happa自用的小工具集”。Dock 随窗口显示：有窗口时显示，最后一个窗口关闭后隐藏且继续后台运行；最小化保留 Dock，多窗口关闭其中一个仍显示，重新打开恢复。
+- 复用 AppModel 与 AppKit 窗口通知，明确 applicationShouldTerminateAfterLastWindowClosed 返回 false；保留主动退出时的 Things3 同步收尾。移除旧 Dock 设置开关及无效配置接口。
+- 先扩展 FinderOperationSmoke 并取得失败证据，再实现、验证共享测试及 Release 构建；备份更新本机安装版，记录验证、归档对话并提交推送。
+
 ## 2026-10-01 README 无弹窗创建
 
 - 去掉 README 创建前确认和成功提示；复用现有创建、日志、防重入及返回 Finder 流程，保留失败提示和无路径时的目录选择。

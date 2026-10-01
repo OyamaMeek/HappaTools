@@ -327,3 +327,22 @@
 - **Git 提交**：`7fa83cb fix: create README without confirmation or success alerts`，已推送至 `origin/main`。
 
 ---
+
+## [2026-10-01 14:57] 概览介绍与自动 Dock 显示
+
+- **需求/问题描述**：
+  > 把介绍改成Happa自用的小工具集，显示界面时显示Dock图标，关闭页面后不退出应用并隐藏Dock图标。
+
+- **实际实现的功能与改动**：
+  - [界面与生命周期]：更新概览介绍；根据可见或最小化窗口自动切换 Dock 策略，最后窗口关闭后继续后台运行，多窗口和重新打开保持正确；移除固定 Dock 开关及无效配置。
+  - [测试/验证]：真实 AppKit 主循环下旧源码目标断言失败，修复后 FinderOperationSmoke 全部通过；33/33共享测试、Release构建、签名及diff检查通过。安装版真实URL操作及重开确认 regular → accessory → regular，PID 52736 保持；辅助功能关闭按钮检查受权限限制，未执行视觉验收。
+  - [本机更新]：ZIP备份校验通过，更新并启动 `/Applications/HappaTools.app`，主程序及framework与Release产物一致；沿用临时签名。
+
+- **涉及文件**：
+  - `HappaTools/App/AppModel.swift`、`HappaTools/Views/OverviewView.swift`、`HappaTools/Views/SettingsView.swift`
+  - `Shared/Configuration/UserSettings.swift`、`Tests/FinderOperationSmoke/main.swift`、`Tests/HappaToolsSharedTests/UserSettingsTests.swift`
+  - `README.md`、`docs/SETUP.md`、`docs/VALIDATION.md`、`docs/CHANGELOG.md`、`memory/`、`context/2026/10/01/14-57-15/对话.md`
+
+- **Git 提交**：待提交。
+
+---

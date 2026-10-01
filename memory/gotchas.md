@@ -1,5 +1,7 @@
 # 注意事项
 
+- AppKit 生命周期烟测必须使用 NSApplication.run 接收启动通知；仅 finishLaunching 不保证 delegate 回调。未激活应用显示窗口可能没有 didBecomeKey 通知；Dock 可见性依据窗口更新后的实际状态，关闭通知中排除即将关闭的窗口。
+
 - 不通过访问 Mail 或其他无关 App 数据来探测隐私权限。临时签名的 designated requirement 绑定 cdhash，更新会使授权失效；安装更新应保持有效证书签名，并同时重启旧主应用和嵌套扩展。
 - security find-identity 的本地有效列表可能包含已被 Apple 撤销的证书；必须验证在线吊销状态并真实启动，不能仅凭 codesign 完整性或跨版本 requirement 检查认定可安装。
 

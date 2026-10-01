@@ -20,14 +20,31 @@ final class AppModel: NSObject, ObservableObject, NSApplicationDelegate {
     private let queue = DispatchQueue(label: "com.happatools.history", qos: .userInitiated)
     private var database: DatabaseManager?
     private var timer: AnyCancellable?
+    private var windowObserver: AnyCancellable?
     private var started = false
     private var requestID = 0
     private let operationHandler = GitOperationHandler()
     private var isChoosing = false
     @Published var operationRunning = false
 
+    override init() {
+        super.init()
+        let notifications = NotificationCenter.default
+        windowObserver = Publishers.Merge(
+            notifications.publisher(for: NSApplication.didUpdateNotification),
+            notifications.publisher(for: NSWindow.willCloseNotification)
+        ).sink { [weak self] notification in
+            self?.applyDockVisibility(excluding: notification.name == NSWindow.willCloseNotification
+                                     ? notification.object as? NSWindow : nil)
+        }
+    }
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         applyDockVisibility()
+    }
+
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        false
     }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
@@ -69,8 +86,12 @@ final class AppModel: NSObject, ObservableObject, NSApplicationDelegate {
         }
     }
 
-    func applyDockVisibility() {
-        NSApp.setActivationPolicy(settings.hideFromDock ? .accessory : .regular)
+    func applyDockVisibility(excluding closingWindow: NSWindow? = nil) {
+        let hasWindow = NSApp.windows.contains {
+            $0 !== closingWindow && ($0.isVisible || $0.isMiniaturized)
+        }
+        let policy: NSApplication.ActivationPolicy = hasWindow ? .regular : .accessory
+        if NSApp.activationPolicy() != policy { NSApp.setActivationPolicy(policy) }
     }
 
     func refresh() {

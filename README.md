@@ -1,6 +1,6 @@
 # HappaTools
 
-macOS Finder 工具：提交并推送 Git 更改、创建 `README.md`、在当前路径打开 iTerm2；主应用还提供 Things3 自动上传，以及设置、操作历史和运行日志。
+Happa自用的小工具集。支持在 Finder 提交并推送 Git 更改、创建 `README.md`、在当前路径打开 iTerm2；主应用还提供 Things3 自动上传，以及设置、操作历史和运行日志。
 
 要求 macOS 11 或更高版本；工程使用 Xcode 16 的目录同步功能，开发需要 Xcode 16 或更新版本。原生 SwiftUI、AppKit、FinderSync、SQLite3，无第三方依赖。
 
@@ -44,8 +44,9 @@ bash scripts/package.sh
 - 不自动初始化仓库，不自动设置远端，不切换分支，不强制推送。推送失败会保留本地提交。
 - README：在 Git 按钮菜单的“提交并推送”下方选择“创建 README.md”，直接原子创建空文件并返回 Finder，不显示创建确认和成功提示。已有文件、目录或符号链接均不覆盖，失败时显示原因。
 - iTerm2：在“创建 README.md”下方选择“在当前路径打开 iTerm2”，新建默认配置窗口并执行 `cd %PATH%; clear; pwd`，路径由 AppleScript 安全引用。需已安装 iTerm2，首次使用按 macOS 提示允许 HappaTools 控制 iTerm2；成功后保持终端前台。实现使用 [iTerm2 官方 AppleScript 接口](https://iterm2.com/documentation-scripting.html)。
-- 设置：默认分支、Git 路径、Git / README 操作开关、在 Dock 中隐藏应用。Dock 设置保存后立即生效，重启后保留；隐藏后仍可从“应用程序”打开 HappaTools。已检出的分支优先于默认分支。
-- Git / README 操作：README 成功后直接关闭 HappaTools 窗口并返回 Finder；其他操作在关闭结果提示或取消后返回 Finder。保留 Finder 当前目录和窗口顺序；Dock 显示继续遵循保存的设置。
+- 设置：默认分支、Git 路径、Git / README 操作开关。已检出的分支优先于默认分支。
+- Dock：显示窗口时显示图标；关闭全部窗口后隐藏图标并继续后台运行，可从“应用程序”重新打开。多窗口和最小化仍保留图标；主动退出会等待进行中的 Things3 同步结束。
+- Git / README 操作：README 成功后直接关闭 HappaTools 窗口并返回 Finder；其他操作在关闭结果提示或取消后返回 Finder。保留 Finder 当前目录和窗口顺序；全部窗口关闭后隐藏 Dock 图标。
 - 历史与日志：显示最近 100 条结果，支持文本、日期、操作类型、状态筛选；每 3 秒刷新；主应用启动和每次执行操作时清理 30 天前记录。
 - Git 在后台运行，每条命令限时 30 秒，日志中每个输出流最多保留 1 MiB；同仓库操作用跨进程锁避免重复提交。
 
