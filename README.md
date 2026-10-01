@@ -26,9 +26,11 @@ swiftc -F .build/xcode/Build/Products/Debug -framework HappaToolsShared \
 # 需要已安装 iTerm2。
 swiftc HappaTools/App/ITermLauncher.swift Tests/ITermSmoke/main.swift -o .build/iterm-smoke
 .build/iterm-smoke
+bash scripts/build.sh Release
+bash Tests/SigningSmoke.sh
 ```
 
-`build.sh` 生成本机临时签名构建，不代表 Developer ID 签名或公证。正式签名需要自己的开发者团队、App Group 和描述文件；见[安装与分发说明](docs/SETUP.md)。
+`build.sh` 优先使用本机有效 Apple Development 证书，保持更新前后的签名身份；也可通过 `CODE_SIGN_IDENTITY` 指定证书。没有证书时使用临时签名并提示更新后可能重新授权。开发构建未公证；正式分发仍需要 Developer ID、App Group 和描述文件，见[安装与分发说明](docs/SETUP.md)。
 
 ```bash
 bash scripts/package.sh

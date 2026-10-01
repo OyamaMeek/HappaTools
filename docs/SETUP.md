@@ -5,7 +5,7 @@
 3. 在 Finder 的“显示 → 自定工具栏”中添加 Git 按钮，菜单中“提交并推送”下方即可创建 README。如需独立 README 按钮，可另外启用 **HappaTools README** 并添加其按钮。关闭某项功能后，对应菜单操作禁用；移除按钮仍需使用 Finder 的自定工具栏。
 4. 如需操作受保护位置，在“隐私与安全性 → 完整磁盘访问权限”中按需授权外层 **HappaTools.app**。Finder Sync 扩展和 README helper 必须保持沙盒，不要给它们单独配置完整磁盘访问权限。授权终端不等于授权应用；更改权限后重新启动主应用/扩展。
 
-应用不把普通 home 文件可读性当成完整磁盘访问证明。概览仅探测 Mail 目录的访问结果；该目录不存在或无法确认时明确显示未知。共享容器访问失败会显示错误，不会将数据静默存到另一处。
+概览提示在系统设置核实权限，不读取其他 App 的数据来探测完整磁盘访问。首次访问 Things3 数据或受保护的目标目录时，macOS 仍可能请求授权；共享容器访问失败会显示错误，不会将数据静默存到另一处。
 
 在设置中勾选“在 Dock 中隐藏应用”并保存后，Dock 图标立即隐藏且重启后保留。需要恢复时，从“应用程序”打开 HappaTools，取消勾选后保存。提交框默认全选日期，直接输入提交说明即可替换；不输入则保留日期。
 
@@ -39,7 +39,13 @@ git push -u origin main
 
 ## 开发与分发签名
 
-`scripts/build.sh` 对本机产物进行临时签名，用于开发检查。`HappaTools-local.dmg` 未公证，不能当作可公开分发版本。
+`scripts/build.sh` 默认选择钥匙串列出的首个有效 Apple Development 身份，签署主应用和所有嵌套代码，并在线检查证书信任及吊销状态；证书已撤销或无法确认有效性时明确失败，不允许安装该产物。同一有效证书下的更新保留签名身份。可用 `CODE_SIGN_IDENTITY` 指定证书名称或 SHA-1；指定身份无法使用时构建失败。没有开发证书时明确提示并使用临时签名，更新后可能重新请求隐私权限；可通过 `CODE_SIGN_IDENTITY=-` 明确选择临时签名。`HappaTools-local.dmg` 未公证，不能当作可公开分发版本。
+
+证书检查显示 `CSSMERR_TP_CERT_REVOKED` 时，在 Xcode → Settings → Accounts → Apple ID → Manage Certificates 重新生成 Apple Development 证书，再重新构建。钥匙串的本地身份列表不能替代在线吊销检查。
+
+从临时签名切换到证书签名时，macOS 可能需要重新授权一次。若原有完整磁盘访问条目失效，请在系统设置移除旧 HappaTools 条目，重新添加 `/Applications/HappaTools.app` 并开启，再重启应用。后续更新保持同一签名证书，不使用临时签名产物覆盖安装版。签名身份与授权关系见 [Apple TN3127](https://developer.apple.com/documentation/technotes/tn3127-inside-code-signing-requirements)。
+
+开发版直接访问其他 App 容器时，macOS 的允许结果可能仅对本次运行有效；稳定签名不能单独替代完整磁盘访问授权。容器访问与 App Group 的系统限制见 [Apple 文件访问说明](https://developer.apple.com/documentation/security/accessing-files-from-the-macos-app-sandbox)。
 
 正式发布时：
 

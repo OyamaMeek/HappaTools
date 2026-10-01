@@ -6,6 +6,9 @@ app.setActivationPolicy(.regular)
 let model = AppModel()
 app.delegate = model
 app.finishLaunching()
+model.refreshStatus()
+assert(model.accessStatus == "请在系统设置确认完整磁盘访问权限；操作受保护目录时由 macOS 请求授权。",
+       "概览检查必须直接说明授权方式，不探测无关 App 的数据目录")
 assert(app.activationPolicy() == (model.settings.hideFromDock ? .accessory : .regular),
        "启动完成后必须应用保存的 Dock 设置")
 let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 420, height: 240),

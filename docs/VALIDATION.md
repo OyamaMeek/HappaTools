@@ -2,6 +2,14 @@
 
 更新时间：2026-10-01。以下结果来自当前工作区和本机已安装的 `/Applications/HappaTools.app`。
 
+## 2026-10-01 App 数据权限弹窗
+
+- TCC 日志明确记录旧授权 code requirement 与安装版 cdhash 不匹配；主应用与 Git 扩展均曾触发 SystemPolicyAppData。概览启动时还会探测无关的 Mail 目录，现已删除该读取。
+- 概览状态断言先失败后通过；33/33 共享测试及 FinderOperationSmoke 通过，Debug/Release 构建完成，脚本语法及 diff 检查通过。未执行视觉检查。
+- 签名烟测可验证两版主应用、helper、扩展及 framework 的身份兼容，但本机两张开发证书在线验证均返回 CSSMERR_TP_CERT_REVOKED。AMFI 同样拒绝实际启动；构建新增在线信任及吊销检查，明确指定撤销证书时返回失败。稳定签名检查尚未通过，需用户在 Xcode 重新生成有效开发证书。
+- 已安装可运行的临时签名修复版，主应用及 Git 扩展真实启动，两个扩展注册路径正确；安装主程序、Git 扩展与 Release 产物一致，签名完整性通过。旧版备份 `.build/HappaTools-before-privacy-fix-20261001.zip` 已校验。
+- 未修改系统 TCC 授权或钥匙串。临时签名更新仍会改变授权身份，开发版访问其他 App 容器也可能在重启后重新询问；未证明长期无弹窗。系统权限须由用户确认。
+
 ## 2026-10-01 Finder 打开 iTerm2
 
 - 菜单和 iterm 请求回归先失败后通过；共享测试33/33、菜单32种状态检查通过，覆盖顺序、独立动作、开关、忙碌与无路径。

@@ -121,21 +121,7 @@ final class AppModel: NSObject, ObservableObject, NSApplicationDelegate {
 
     func refreshStatus() {
         extensionEnabled = FIFinderSyncController.isExtensionEnabled
-        queue.async {
-            let protectedDirectory = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Mail")
-            let status: String
-            do {
-                _ = try FileManager.default.contentsOfDirectory(atPath: protectedDirectory.path)
-                status = "Mail 目录可读取；请在系统设置确认完整磁盘访问权限"
-            } catch let error as NSError {
-                if error.domain == NSCocoaErrorDomain && error.code == NSFileReadNoPermissionError {
-                    status = "受保护目录访问被拒绝，请授予完整磁盘访问权限"
-                } else {
-                    status = "无法自动确认，请在系统设置检查完整磁盘访问权限"
-                }
-            }
-            DispatchQueue.main.async { self.accessStatus = status }
-        }
+        accessStatus = "请在系统设置确认完整磁盘访问权限；操作受保护目录时由 macOS 请求授权。"
     }
 
     func openPrivacySettings() {

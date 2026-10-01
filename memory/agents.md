@@ -1,5 +1,7 @@
 # 开发环境
 
+- 2026-10-01 权限弹窗：仅主代理；系统 log 和 codesign 定位，复用本机 Apple Development 身份签名，不导出私钥、不改 TCC 数据库；既有 AppKit 与跨构建签名烟测验证。
+
 - 2026-10-01 iTerm2 菜单：仅主代理实施；Swift / AppKit、系统 osascript 和 iTerm2 AppleScript 接口，不增加依赖。验证使用真实 iTerm2、既有 Swift 测试和 AppKit 烟测，不截图。
 
 - 2026-09-29 Things3 功能：主代理在当前 main 实施；参考目录仅用于研究，不打包 Python 运行时。使用 Swift、SQLite3、既有 GitExecutor；验证使用真实 SQLite 样本和本地 bare Git 远端。
