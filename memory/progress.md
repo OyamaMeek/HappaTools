@@ -5,7 +5,7 @@
 - [x] 核对README渲染入口与完整导出关系，确定仅过滤概览，覆盖所有同名项目并同步调整统计。
 - [x] 新增SQLite回归先失败后通过，覆盖多个同名项目、各状态和详细文件保留；36/36共享测试、Release构建/签名及ThingsAppSmoke通过。
 - [x] 旧版ZIP备份校验、安装签名及主程序/framework一致性通过；Things3-sync提交7dd1401已核对GitHub远端，唯一改动README，项目详细文件hash保持一致；未完成任务34项、最近完成20项。
-- [ ] 日志与对话归档、提交和普通推送。
+- [x] 日志与对话已归档；修复提交`0dab78d fix: hide Things tutorial projects from README overview`已普通推送至`origin/main`。
 
 ## 2026-10-01 Things3 仓库任务概览
 
