@@ -2,6 +2,13 @@
 
 更新时间：2026-10-01。以下结果来自当前工作区和本机已安装的 `/Applications/HappaTools.app`。
 
+## 2026-10-01 README 无弹窗创建
+
+- FinderOperationSmoke 通过实际 AppModel.handle 创建空 README，检测 modal 数量；零弹窗断言先失败，修复后 Debug / Release framework 两次检查通过，成功后关闭主窗口并释放忙碌状态。
+- 已有 README 的内容保持不变，仅显示失败提示；Git 取消/失败、无效目录、结果弹窗期间防重入和 Dock 设置通过。33/33共享测试与 PromptSmoke 通过。
+- Release 构建、签名完整性、diff检查通过；只有既有 AppIntents 元数据警告。未执行截图或视觉验收。
+- 旧安装版备份 `.build/HappaTools-before-readme-prompts-20261001.zip` 已校验；更新并启动 `/Applications/HappaTools.app`，主程序及 Git 扩展与 Release 产物逐字节一致。沿用临时签名，既有系统权限限制仍适用。
+
 ## 2026-10-01 提交弹窗顶部图标及光标排查
 
 - 提交弹窗用原生空图像代替顶部应用图标；PromptSmoke 的实际视图树检查失败→通过，日期全选、直接替换、多行、默认值、取消及深浅色光标颜色保持通过。

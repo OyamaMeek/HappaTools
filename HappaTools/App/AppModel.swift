@@ -172,10 +172,6 @@ final class AppModel: NSObject, ObservableObject, NSApplicationDelegate {
                 }
                 message = input
             } else {
-                guard OperationPrompt.confirmReadme(at: directory) else {
-                    self.returnToFinder()
-                    return
-                }
                 message = nil
             }
             self.operationRunning = true
@@ -184,7 +180,11 @@ final class AppModel: NSObject, ObservableObject, NSApplicationDelegate {
                 self.refresh()
                 switch result {
                 case .success(let file):
-                    self.presentFinderResult(file == nil ? "Git 提交与推送已完成。" : "已创建 README.md。")
+                    if file == nil {
+                        self.presentFinderResult("Git 提交与推送已完成。")
+                    } else {
+                        self.returnToFinder()
+                    }
                 case .failure(let error):
                     self.presentFinderResult(error.localizedDescription, failed: true)
                 }

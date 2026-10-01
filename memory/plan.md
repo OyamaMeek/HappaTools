@@ -1,5 +1,11 @@
 # HappaTools Implementation Plan
 
+## 2026-10-01 README 无弹窗创建
+
+- 去掉 README 创建前确认和成功提示；复用现有创建、日志、防重入及返回 Finder 流程，保留失败提示和无路径时的目录选择。
+- 现有 FinderOperationSmoke 先验证 README 成功零弹窗并取得失败证据，再修改 AppModel、删除无调用的 confirmReadme；验证重复文件不覆盖、Git 取消/失败和无效目录。
+- 运行共享测试、PromptSmoke、Release 构建；备份更新本机安装版，沿用已明确的临时签名限制；更新文档、归档对话并提交推送。
+
 ## 2026-10-01 提交框光标持续显示
 
 - 用户追加要求去掉提交弹窗顶部图标；只修改该弹窗的 icon，使用原生空图像，保留布局及应用图标。现有 PromptSmoke 先检查图标未移除，再验证修改。

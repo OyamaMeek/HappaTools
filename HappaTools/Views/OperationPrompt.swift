@@ -11,16 +11,6 @@ enum OperationPrompt {
         return picker.runModal() == .OK ? picker.url : nil
     }
 
-    static func confirmReadme(at directory: URL) -> Bool {
-        let alert = NSAlert()
-        alert.messageText = "创建 README.md"
-        alert.informativeText = directory.path + "\n已有文件会保留原样。"
-        alert.addButton(withTitle: "创建")
-        alert.addButton(withTitle: "取消")
-        NSApp.activate(ignoringOtherApps: true)
-        return alert.runModal() == .alertFirstButtonReturn
-    }
-
     static func commitMessage(at directory: URL) -> String? {
         let alert = NSAlert()
         alert.icon = NSImage(size: NSSize(width: 1, height: 1))

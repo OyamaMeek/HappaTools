@@ -307,3 +307,23 @@
 - **Git 提交**：`72248a6 fix: hide icon in commit message prompt`，已推送至 `origin/main`。
 
 ---
+
+## [2026-10-01 14:33] 去掉 README 创建确认和成功弹窗
+
+- **需求/问题描述**：
+  > 用户提供创建 README.md 的确认与操作完成截图，要求这两个弹窗不再显示。
+
+- **实际实现的功能与改动**：
+  - [创建流程]：点击 README 操作后直接创建，成功后返回 Finder；删除无调用的确认方法，保留失败提示、目录选择、防重入、日志和已有文件保护。
+  - [测试/验证]：零弹窗回归先失败后通过；Debug / Release framework 下 FinderOperationSmoke、33/33共享测试、PromptSmoke、Release构建、签名完整性和diff检查通过。未执行截图或视觉验收。
+  - [本机更新]：旧版 ZIP 备份校验通过，更新并启动 `/Applications/HappaTools.app`，主程序和Git扩展与Release产物逐字节一致；沿用临时签名。
+
+- **涉及文件**：
+  - `HappaTools/App/AppModel.swift`、`HappaTools/Views/OperationPrompt.swift`
+  - `Tests/FinderOperationSmoke/main.swift`、`README.md`
+  - `docs/VALIDATION.md`、`docs/CHANGELOG.md`、`memory/agents.md`、`memory/plan.md`、`memory/progress.md`、`memory/verify.md`
+  - `context/2026/10/01/14-33-00/对话.md`
+
+- **Git 提交**：待提交
+
+---
