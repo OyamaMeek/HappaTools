@@ -1,5 +1,11 @@
 # 验证标准
 
+## 2026-10-01 重新打包
+
+- `bash scripts/package.sh` 在沙盒外退出码 0，Release 构建和临时签名通过。
+- `hdiutil verify` 校验通过；只读挂载后 `codesign --verify --deep --strict` 通过，主程序与 Release 产物、使用说明与 `docs/SETUP.md` 的 `cmp` 通过，Applications 链接指向 `/Applications`，`lipo -archs` 为 x86_64 / arm64；镜像已卸载。
+- DMG 大小 1852075 字节，SHA-256：`b030437f432a310346438a8d89a05eaee1b04820122094ec51db8850506c8770`。未运行功能测试、安装或视觉验收，未公证。
+
 ## 2026-10-01 README 默认屏蔽教程项目
 
 - 教程项目及其活动/完成/取消任务不进入README统计、分组或最近完成；多个同名项目均排除，详细文件保持导出。同名领域、独立任务和其他项目仍显示。

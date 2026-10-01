@@ -388,3 +388,21 @@
 - **Git 提交**：`0dab78d fix: hide Things tutorial projects from README overview`，已普通推送至`origin/main`。
 
 ---
+
+## [2026-10-01 19:30] 重新生成本机 DMG
+
+- **需求/问题描述**：
+  > 重新打包。
+
+- **实际实现的功能与改动**：
+  - [打包]：运行既有 Xcode Release 与 DMG 流程，生成 `dist/HappaTools-local.dmg`（1852075 字节），包含 x86_64 / arm64。流程未使用 UPX，无需添加 PyInstaller 参数；未修改源码或构建脚本。
+  - [测试/验证]：沙盒内应用复制受限，获准在沙盒外重跑后退出码 0。Release 构建、临时签名、DMG 校验、包内签名、主程序和使用说明一致性、Applications 链接检查通过；已卸载验证镜像。未运行功能测试、安装或视觉验收，未公证。
+  - [产物]：SHA-256 为 `b030437f432a310346438a8d89a05eaee1b04820122094ec51db8850506c8770`，产物及构建日志位于已忽略目录。
+
+- **涉及文件**：
+  - `memory/progress.md`、`memory/verify.md`、`docs/CHANGELOG.md`
+  - `context/2026/10/01/19-30-01/对话.md`
+
+- **Git 提交**：待提交。
+
+---
