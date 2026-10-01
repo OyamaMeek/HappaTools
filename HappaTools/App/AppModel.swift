@@ -157,7 +157,7 @@ final class AppModel: NSObject, ObservableObject, NSApplicationDelegate {
                 self.presentFinderResult(error.localizedDescription, failed: true)
                 return
             }
-            guard request.operation == .git ? self.settings.showGitButton : self.settings.showReadmeButton else {
+            guard request.operation == .iterm || (request.operation == .git ? self.settings.showGitButton : self.settings.showReadmeButton) else {
                 self.presentFinderResult("此操作已在设置中关闭。", failed: true)
                 return
             }
@@ -172,6 +172,10 @@ final class AppModel: NSObject, ObservableObject, NSApplicationDelegate {
                 }
             } catch {
                 self.presentFinderResult(error.localizedDescription, failed: true)
+                return
+            }
+            if request.operation == .iterm {
+                self.openITerm(at: directory)
                 return
             }
             let message: String?
@@ -200,6 +204,28 @@ final class AppModel: NSObject, ObservableObject, NSApplicationDelegate {
                 }
                 self.operationRunning = false
                 self.settings.operationInProgress = false
+            }
+        }
+    }
+
+    private func openITerm(at directory: URL) {
+        operationRunning = true
+        settings.operationInProgress = true
+        queue.async {
+            let result = Result { try ITermLauncher.open(at: directory) }
+            DispatchQueue.main.async {
+                defer {
+                    self.operationRunning = false
+                    self.settings.operationInProgress = false
+                }
+                switch result {
+                case .success:
+                    for window in NSApp.windows where window.isVisible { window.close() }
+                    self.applyDockVisibility()
+                    NSApp.hide(nil)
+                case .failure(let error):
+                    self.presentFinderResult(error.localizedDescription, failed: true)
+                }
             }
         }
     }

@@ -1,5 +1,11 @@
 # HappaTools Implementation Plan
 
+## 2026-10-01 Finder 打开 iTerm2
+
+- 在 Git 工具栏菜单的 README 项之后增加“在当前路径打开 iTerm2”，复用 FinderRequest 和主应用路由；不增加设置开关。
+- 主应用校验实际目录，在后台通过系统 osascript 调用 iTerm2，新建默认配置窗口并执行 `cd %PATH%; clear; pwd`。目录作为 argv 传递，AppleScript 的 quoted form 负责 shell 转义；成功后隐藏 HappaTools，保持 iTerm2 前台。
+- 菜单和 URL 测试先失败后实现，验证实际 iTerm2 路径与特殊字符；运行共享测试、Finder 操作烟测和 Release 构建，备份更新安装版，记录并提交推送。
+
 ## 2026-09-30 Things3 新仓库保存配置
 
 - 已确认用户目标仓库有唯一 origin、main 尚无提交、无 branch.main 上游配置；保存被 hasRemoteTracking 拒绝，随后开关覆盖具体错误。

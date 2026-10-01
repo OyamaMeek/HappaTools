@@ -1,6 +1,14 @@
 # 验证记录
 
-更新时间：2026-09-30。以下结果来自当前工作区和本机已安装的 `/Applications/HappaTools.app`。
+更新时间：2026-10-01。以下结果来自当前工作区和本机已安装的 `/Applications/HappaTools.app`。
+
+## 2026-10-01 Finder 打开 iTerm2
+
+- 菜单和 iterm 请求回归先失败后通过；共享测试33/33、菜单32种状态检查通过，覆盖顺序、独立动作、开关、忙碌与无路径。
+- ITermSmoke 调用实际启动器，新建真实 iTerm2 会话；会话将 pwd 写入项目测试文件，普通目录及包含中文、空格、单双引号、命令替换和分号的目录均与输入完全一致。
+- FinderOperationSmoke 通过既有 Git/README 取消、成功与失败、Dock 设置、结果防重入及新增 iTerm2 无效目录检查。烟测使用独立无上游仓库；测试共享状态已恢复。
+- Release 构建及签名通过，安装版主程序与 Git 扩展逐字节一致。旧版备份为 `.build/HappaTools-before-iterm-20261001.zip`；已重新注册并重启 Git 扩展。构建仍有原有 AppIntents/扩展版本号警告。
+- 未截图验收，未将会话历史文本当作 clear 屏幕效果的证据；首次使用 HappaTools 控制 iTerm2 的系统自动化授权由用户按提示选择。
 
 ## 2026-09-30 Things3 空仓库配置保存
 

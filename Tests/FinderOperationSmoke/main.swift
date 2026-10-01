@@ -15,12 +15,19 @@ let directory = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
     .appendingPathComponent("HappaTools-FinderSmoke-\(UUID().uuidString)", isDirectory: true)
 try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
 defer { try? FileManager.default.removeItem(at: directory) }
+let initialize = Process()
+initialize.executableURL = URL(fileURLWithPath: "/usr/bin/git")
+initialize.arguments = ["init", "--quiet", directory.path]
+try initialize.run()
+initialize.waitUntilExit()
+assert(initialize.terminationStatus == 0, "烟测必须使用独立无上游仓库")
 
 // Missing cancellation/completion cleanup must leave a visible window and fail this check.
 for (operation, confirm, target) in [(FinderRequest.Operation.readme, false, directory),
                                     (.git, false, directory), (.readme, true, directory),
                                     (.git, true, directory),
-                                    (.readme, false, directory.appendingPathComponent("missing"))] {
+                                    (.readme, false, directory.appendingPathComponent("missing")),
+                                    (.iterm, false, directory.appendingPathComponent("missing"))] {
     app.unhide(nil)
     window.makeKeyAndOrderFront(nil)
     var dismissed = false
@@ -52,4 +59,4 @@ for (operation, confirm, target) in [(FinderRequest.Operation.readme, false, dir
                "必须验证真实 README 创建成功后的收尾")
     }
 }
-print("Finder 操作检查通过：启动 Dock 设置、Git / README 取消、README 成功、Git 失败、目录失效及结果弹窗防重入。")
+print("Finder 操作检查通过：启动 Dock 设置、Git / README 取消、README 成功、Git 失败、README / iTerm2 目录失效及结果弹窗防重入。")

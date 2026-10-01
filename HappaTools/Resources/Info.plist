@@ -18,4 +18,5 @@
     <key>LSUIElement</key><true/>
     <key>NSHighResolutionCapable</key><true/>
     <key>NSPrincipalClass</key><string>NSApplication</string>
+    <key>NSAppleEventsUsageDescription</key><string>在 Finder 当前文件夹打开 iTerm2，并执行 cd、clear 和 pwd。</string>
 </dict></plist>

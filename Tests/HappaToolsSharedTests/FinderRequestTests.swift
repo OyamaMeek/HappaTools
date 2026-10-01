@@ -3,8 +3,18 @@ import XCTest
 @testable import HappaToolsShared
 
 final class FinderRequestTests: XCTestCase {
+    func testAcceptsITermRequestWithQuotedPath() throws {
+        let path = "/Users/中文 空格/'引号\"/$HOME;pwd"
+        var components = URLComponents(string: "happatools://iterm")!
+        components.queryItems = [URLQueryItem(name: "path", value: path)]
+        let decoded = try FinderRequest(url: components.url!)
+        XCTAssertEqual(decoded.operation.rawValue, "iterm")
+        XCTAssertEqual(decoded.directory?.path, path)
+        XCTAssertEqual(try FinderRequest(url: decoded.url).directory?.path, path)
+    }
+
     func testRoundTripsOperationsWithoutDirectory() throws {
-        for operation in [FinderRequest.Operation.git, .readme] {
+        for operation in [FinderRequest.Operation.git, .readme, .iterm] {
             let request = FinderRequest(operation: operation, directory: nil)
             let decoded = try FinderRequest(url: request.url)
 

@@ -241,3 +241,25 @@
 - **Git 提交**：`0497f44 fix: support Things3 configuration for empty repositories`，已推送至 `origin/main`。
 
 ---
+
+## [2026-10-01 10:30] 在 Finder 当前路径打开 iTerm2
+
+- **需求/问题描述**：
+  > 在截图菜单的现有项目下方增加当前路径打开 iTerm2，执行 cd %PATH%; clear; pwd。
+
+- **实际实现的功能与改动**：
+  - [菜单与请求]：Git 菜单在 README 下方增加“在当前路径打开 iTerm2”，复用 FinderRequest 与主应用通道；无路径时选择文件夹，校验实际目录。
+  - [终端]：后台调用系统 osascript，新建 iTerm2 默认配置窗口并执行指定命令；argv 传递路径，quoted form 引用，明确报告未安装或脚本失败；补充自动化权限声明。
+  - [测试/验证]：请求和菜单回归先失败后通过；33/33 共享测试、32种菜单状态、FinderOperationSmoke、真实 iTerm2 普通及特殊字符工作目录检查、Release 构建和签名通过。烟测使用独立无上游仓库，测试状态已恢复。未执行视觉验收。
+  - [本机更新]：旧版备份至 `.build/HappaTools-before-iterm-20261001.zip`，更新安装版，主程序与扩展一致性通过，重新注册并重启 Git 扩展。
+
+- **涉及文件**：
+  - `FinderSyncExtension/FinderSync.swift`、`FinderSyncExtension/MenuBuilder.swift`
+  - `Shared/Configuration/FinderRequest.swift`、`HappaTools/App/AppModel.swift`、`HappaTools/App/ITermLauncher.swift`
+  - `HappaTools/Resources/Info.plist`、`HappaTools/HappaTools.entitlements`
+  - `Tests/MenuSmoke/main.swift`、`Tests/FinderOperationSmoke/main.swift`、`Tests/ITermSmoke/main.swift`、`Tests/HappaToolsSharedTests/FinderRequestTests.swift`
+  - `README.md`、`docs/VALIDATION.md`、`docs/CHANGELOG.md`、`memory/`、`context/2026/10/01/10-30-39/对话.md`
+
+- **Git 提交**：待提交。
+
+---

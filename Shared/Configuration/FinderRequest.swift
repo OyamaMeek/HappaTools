@@ -4,6 +4,7 @@ public struct FinderRequest {
     public enum Operation: String {
         case git
         case readme
+        case iterm
     }
 
     public let operation: Operation
