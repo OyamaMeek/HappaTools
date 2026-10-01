@@ -365,6 +365,6 @@
   - `memory/agents.md`、`memory/plan.md`、`memory/progress.md`、`memory/verify.md`
   - `context/2026/10/01/15-20-41/对话.md`
 
-- **Git 提交**：待提交。
+- **Git 提交**：`6426684 feat: export Things3 task overview README`，已普通推送至`origin/main`。
 
 ---
