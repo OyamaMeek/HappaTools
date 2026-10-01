@@ -343,6 +343,6 @@
   - `Shared/Configuration/UserSettings.swift`、`Tests/FinderOperationSmoke/main.swift`、`Tests/HappaToolsSharedTests/UserSettingsTests.swift`
   - `README.md`、`docs/SETUP.md`、`docs/VALIDATION.md`、`docs/CHANGELOG.md`、`memory/`、`context/2026/10/01/14-57-15/对话.md`
 
-- **Git 提交**：待提交。
+- **Git 提交**：`3c5c659 fix: manage Dock visibility with application windows`，已推送至 `origin/main`。
 
 ---
