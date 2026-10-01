@@ -6,7 +6,7 @@
 - [x] README 零弹窗断言先失败；移除确认调用与成功提示后，Debug / Release framework 下的 FinderOperationSmoke 均通过，重复文件保护及失败收尾保持通过。
 - [x] 33/33 共享测试、PromptSmoke、Release 构建通过；备份 ZIP 校验、安装签名完整性、主程序及 Git 扩展逐字节校验通过，已启动安装版。
 - [x] README、验证记录、日志及对话归档已更新。
-- [ ] 提交并普通推送至 origin/main。
+- [x] 修复提交 `7fa83cb fix: create README without confirmation or success alerts` 已普通推送至 origin/main。
 
 ## 2026-10-01 提交框光标持续显示
 
