@@ -422,6 +422,6 @@
   - `Tests/HappaToolsSharedTests/ThingsTests.swift`、`docs/THINGS3.md`、`docs/CHANGELOG.md`
   - `memory/agents.md`、`memory/plan.md`、`memory/progress.md`、`memory/verify.md`
 
-- **Git 提交**：待提交。
+- **Git 提交**：`4c081a7 fix: exclude Someday tasks from Things3 backups`，已普通推送至 `origin/main`。
 
 ---
