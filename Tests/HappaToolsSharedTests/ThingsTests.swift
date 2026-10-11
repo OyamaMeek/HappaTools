@@ -27,6 +27,46 @@ final class ThingsTests: XCTestCase {
         }
     }
 
+    func testSomedayTasksAreExcludedFromAllBackups() throws {
+        let (root, remote) = try TestSupport.configuredRepository()
+        let db = try copyDatabase(to: root.deletingLastPathComponent())
+        let executor = GitExecutor(executableURL: URL(fileURLWithPath: "/usr/bin/git"))
+        let target = try ThingsSyncTarget.capture(at: root, executor: executor)
+        let sync = ThingsSync(executor: executor)
+        _ = try sync.run(database: db, target: target)
+        let manifestURL = root.appendingPathComponent(ThingsExport.manifestPath)
+        var manifest = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: manifestURL)) as? [String: Any])
+        let files = try XCTUnwrap(manifest["files"] as? [String])
+        manifest["files"] = Set(files + ["Someday.md"]).sorted()
+        try JSONSerialization.data(withJSONObject: manifest).write(to: manifestURL)
+        try Data((ThingsExport.marker + "# Someday\n\nlegacy task\n").utf8)
+            .write(to: root.appendingPathComponent("Someday.md"))
+        try TestSupport.git(["add", "Someday.md", ThingsExport.manifestPath], at: root)
+        try TestSupport.git(["commit", "-m", "legacy someday export"], at: root)
+        let ids = ["DfYoiXcNLQssk9DkSoJV3Y", "E18tg5qepzrQk9J6jQtb5C", "Q7uN9y3jp5ChZAGjZJhMfY", "HbKGAeZKFDkWH5osSBNHvz", "JLYSEPFkLfBC5rhGJRa5S1"]
+        try sql("UPDATE TMTask SET start=2,startDate=0,deadline=132464128 WHERE uuid IN ('\(ids.joined(separator: "','"))')", at: db)
+        let snapshot = try ThingsReader.read(at: db)
+        XCTAssertFalse(snapshot.tasks.contains { ids.contains($0["uuid"]!) })
+        let output = try ThingsExport.render(snapshot)
+        XCTAssertNil(output.files["Someday.md"])
+        XCTAssertFalse(output.files["README.md"]!.contains("Someday.md"))
+        XCTAssertTrue(output.files["Upcoming.md"]!.contains("To-Do in Upcoming"))
+        let future = try ThingsExport.render(snapshot, now: Date(timeIntervalSince1970: 0))
+        XCTAssertEqual(future.files["Upcoming.md"]!.components(separatedBy: "<!-- uuid: 7F4vqUNiTvGKaCUfv5pqYG -->").count - 1, 1)
+        XCTAssertTrue(output.files["已完成.md"]!.contains("Completed To-Do in Someday"))
+        XCTAssertTrue(output.files["已取消.md"]!.contains("Cancelled To-Do in Someday"))
+        XCTAssertTrue(try sync.run(database: db, target: target).committed)
+        let paths = try TestSupport.git(["ls-tree", "-r", "--name-only", "HEAD"], at: root)
+            .split(separator: "\n").map(String.init).filter { $0.hasSuffix(".md") }
+        for path in paths {
+            let contents = try String(contentsOf: root.appendingPathComponent(path))
+            for id in ids { XCTAssertFalse(contents.contains(id), path) }
+            XCTAssertEqual(try TestSupport.git(["show", "main:" + path], at: remote), contents)
+        }
+        XCTAssertFalse(FileManager.default.fileExists(atPath: root.appendingPathComponent("Someday.md").path))
+        XCTAssertFalse(try sync.run(database: db, target: target).committed)
+    }
+
     func testReadAndExportActualThingsSample() throws {
         let original = try Data(contentsOf: Self.fixture)
         let snapshot = try ThingsReader.read(at: Self.fixture)
@@ -49,13 +89,13 @@ final class ThingsTests: XCTestCase {
         let snapshot = try ThingsReader.read(at: Self.fixture)
         let output = try ThingsExport.render(snapshot)
         let readme = try XCTUnwrap(output.files["README.md"])
-        XCTAssertTrue(readme.contains("未完成 **15**"))
+        XCTAssertTrue(readme.contains("未完成 **14**"))
         XCTAssertTrue(readme.contains("已完成 **12**"))
         XCTAssertTrue(readme.contains("已取消 **10**"))
         let sections = readme.components(separatedBy: "## 最近完成")
         XCTAssertEqual(sections.count, 2)
         let pending = sections[0]
-        XCTAssertEqual(pending.components(separatedBy: "- [ ] ").count - 1, 15)
+        XCTAssertEqual(pending.components(separatedBy: "- [ ] ").count - 1, 14)
         for task in snapshot.tasks where task["type"] == "0" && task["status"] == "0" {
             XCTAssertEqual(pending.components(separatedBy: "[\(task["title"]!)](").count - 1, 1)
         }
@@ -107,7 +147,7 @@ final class ThingsTests: XCTestCase {
         XCTAssertFalse(readme.contains("重复教程任务"))
         XCTAssertTrue(readme.contains("### 领域：Things Mac 概览"))
         XCTAssertTrue(readme.contains("[了解 Things for iPhone]("))
-        XCTAssertTrue(readme.contains("未完成 **9** · 已完成 **8** · 已取消 **8**"))
+        XCTAssertTrue(readme.contains("未完成 **8** · 已完成 **8** · 已取消 **8**"))
         let hiddenIDs = ["TCozQqXVbB2TJkXXXQj2H9", "3x1QqJqfvZyhtw8NSdnZqG", "PgsWnDkzXRz6zvofTqtHqn"]
         for task in snapshot.tasks where task["type"] == "0" && hiddenIDs.contains(task["project"] ?? "") {
             XCTAssertFalse(readme.contains("[\(task["title"]!)]("))

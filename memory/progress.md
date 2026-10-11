@@ -1,5 +1,12 @@
 # 当前进度
 
+## 2026-10-11 排除某天任务
+
+- [x] 用户确认所有某天任务不备份；读取 Reader、Export、Files、Sync 和调用测试。未跟踪的 AGENTS.md、Things3-push/、things.py/ 保持原状。
+- [x] SQLite/Git 回归先出现15个目标断言失败，实施统一过滤后通过；清理导航和旧 Someday.md，保留 Upcoming 和结束任务。
+- [x] 37/37 共享测试、Release 构建/临时签名、ThingsAppSmoke、diff 检查通过。日志在忽略的 .build/someday-*.log。不安装、不操作个人备份仓库、不截图。
+- [ ] 提交和普通推送。
+
 ## 2026-10-01 重新打包
 
 - [x] 运行既有 `scripts/package.sh`，Release 构建与临时签名通过；沙盒限制应用复制后，在获准的沙盒外执行成功。

@@ -84,6 +84,7 @@ public enum ThingsReader {
             LEFT JOIN TMTask P ON P.uuid = T.project
             LEFT JOIN TMTask HP ON HP.uuid = H.project
             WHERE T.trashed = 0 AND T.rt1_recurrenceRule IS NULL
+              AND NOT (T.type = 0 AND T.status = 0 AND T.start = 2 AND COALESCE(T.startDate, 0) <= 0)
               AND COALESCE(P.trashed, 0) = 0 AND COALESCE(H.trashed, 0) = 0 AND COALESCE(HP.trashed, 0) = 0
             ORDER BY T."index", T.uuid
             """)

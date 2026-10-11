@@ -8,7 +8,7 @@ public struct ThingsRendered {
 public enum ThingsExport {
     static let marker = "<!-- generated-by: happatools-things3; do not edit -->\n"
     static let manifestPath = ".happatools-things3.json"
-    private static let lists = ["Inbox", "Today", "Anytime", "Someday", "Upcoming", "已完成", "已取消"]
+    private static let lists = ["Inbox", "Today", "Anytime", "Upcoming", "已完成", "已取消"]
 
     public static func render(_ snapshot: ThingsSnapshot, now: Date = Date()) throws -> ThingsRendered {
         var files = Dictionary(uniqueKeysWithValues: lists.map { ($0 + ".md", marker + "# " + $0 + "\n\n") })
@@ -41,7 +41,7 @@ public enum ThingsExport {
             case "3": name = "已完成"
             case "2": name = "已取消"
             default:
-                name = directory == nil ? (["0": "Inbox", "1": "Anytime", "2": "Someday"][task["start"] ?? ""] ?? "Inbox") : "tasks"
+                name = directory == nil ? (["0": "Inbox", "1": "Anytime", "2": "Upcoming"][task["start"] ?? ""] ?? "Inbox") : "tasks"
             }
             let path = directory.map { $0 + "/" + name + ".md" } ?? name + ".md"
             taskPaths[task["uuid"]!] = path
@@ -60,7 +60,7 @@ public enum ThingsExport {
                 || (start == nil && due != nil && due! <= today && (task["deadlineSuppressionDate"] == nil || task["deadlineSuppressionDate"] == "0")) {
                 files["Today.md"]! += block(task, entities: entities, tags: tags, checklist: checklist)
             }
-            if task["start"] == "2", let start, start > today {
+            if task["start"] == "2", let start, start > today, taskPaths[task["uuid"]!] != "Upcoming.md" {
                 files["Upcoming.md"]! += block(task, entities: entities, tags: tags, checklist: checklist)
             }
         }
@@ -85,7 +85,7 @@ public enum ThingsExport {
         }
         var text = marker + "# Things3 任务概览\n\n"
         text += "未完成 **\(pending.count)** · 已完成 **\(completed.count)** · 已取消 **\(tasks.filter { $0["status"] == "2" }.count)**\n\n"
-        text += "[今天](Today.md) · [即将到来](Upcoming.md) · [收件箱](Inbox.md) · [随时](Anytime.md) · [某天](Someday.md)\n\n"
+        text += "[今天](Today.md) · [即将到来](Upcoming.md) · [收件箱](Inbox.md) · [随时](Anytime.md)\n\n"
         text += "随 Things3 同步自动更新；点击任务名称查看详情。\n\n## 未完成任务\n\n"
         let groups = Dictionary(grouping: pending, by: { paths[$0["uuid"]!]! })
         func entry(_ task: [String: String], completed: Bool) -> String {
@@ -100,7 +100,6 @@ public enum ThingsExport {
                 for (key, label) in [("start_date", "开始"), ("deadline", "截止")] {
                     if let date = task[key] { result += " · \(label) \(line(date))" }
                 }
-                if task["start"] == "2" && task["start_date"] == nil { result += " · 某天" }
             }
             return result + "\n"
         }
@@ -113,7 +112,7 @@ public enum ThingsExport {
             } else if path.hasPrefix("Areas/"), let area = first["area"].flatMap({ entities[$0] }) {
                 label = "领域：" + (area["title"] ?? "")
             } else {
-                label = ["Inbox.md": "收件箱", "Anytime.md": "随时", "Someday.md": "某天"][path] ?? path
+                label = ["Inbox.md": "收件箱", "Anytime.md": "随时", "Upcoming.md": "即将到来"][path] ?? path
             }
             text += "### \(line(label))（\(rows.count)）\n\n" + rows.map { entry($0, completed: false) }.joined() + "\n"
         }

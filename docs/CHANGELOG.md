@@ -406,3 +406,22 @@
 - **Git 提交**：`8f6e961 docs: record rebuilt local DMG verification`，已普通推送至 `origin/main`。
 
 ---
+
+## [2026-10-11 23:15] 排除所有某天任务
+
+- **需求/问题描述**：
+  > Things3 备份中的“某天（1）”不要备份；用户确认排除所有某天任务，包括项目、领域内任务。
+
+- **实际实现的功能与改动**：
+  - [导出范围]：ThingsReader 统一排除 start=2 且无开始日期的活动任务，README、详细文件和同步数量一致。保留有日期任务、完成和取消记录。
+  - [文件清理]：移除 Someday.md 输出和导航，沿用既有清单删除旧托管文件；独立日期任务写入 Upcoming.md，避免重复条目。保留 Git 历史与 Archived 文件。
+  - [测试/验证]：真实 SQLite/Git 回归先出现15个目标断言失败，修复后37/37共享测试通过；Release构建/临时签名、ThingsAppSmoke、diff检查通过。未安装、未操作个人备份仓库、未截图。
+
+- **涉及文件**：
+  - `Shared/Things/ThingsReader.swift`、`Shared/Things/ThingsExport.swift`
+  - `Tests/HappaToolsSharedTests/ThingsTests.swift`、`docs/THINGS3.md`、`docs/CHANGELOG.md`
+  - `memory/agents.md`、`memory/plan.md`、`memory/progress.md`、`memory/verify.md`
+
+- **Git 提交**：待提交。
+
+---
