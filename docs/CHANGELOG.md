@@ -447,3 +447,21 @@
 - **Git 提交**：`c36f725 feat: add Finder pull with rebase from origin main`，已普通推送至 `origin/main`。
 
 ---
+
+## [2026-10-16 17:37] 更新本机 Finder pull 安装版
+
+- **需求/问题描述**：
+  > 用户反馈 Finder 菜单中没有 pull。
+
+- **实际实现的功能与改动**：
+  - [安装]：确认安装版与新版产物不同；旧版备份至 `.build/HappaTools-before-pull-20261016.zip` 并通过ZIP完整校验。正常退出旧主应用后更新 `/Applications/HappaTools.app`，移除构建目录重复注册，重新注册并启动新版扩展。
+  - [测试/验证]：安装签名、主程序/共享framework/两个扩展与Release产物逐字节一致性、菜单32种状态通过；安装扩展包含pull动作。Git插件仅注册安装路径，主应用PID9885、Git扩展PID9887均从Applications运行。
+  - [范围]：未修改功能代码，未截图，未对用户当前仓库执行pull；沿用临时签名，macOS可能要求重新授权。
+
+- **涉及文件**：
+  - `memory/agents.md`、`memory/plan.md`、`memory/progress.md`、`memory/verify.md`、`memory/gotchas.md`、`docs/CHANGELOG.md`
+  - 本机 `/Applications/HappaTools.app`；备份和构建产物位于忽略的 `.build/`。
+
+- **Git 提交**：安装记录待提交。
+
+---

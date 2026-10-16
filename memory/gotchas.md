@@ -1,5 +1,7 @@
 # 注意事项
 
+- 用户要求修改本机正在使用的 Finder 菜单时，交付需要包含备份、更新安装版和重新加载扩展；源码提交与构建通过不能证明已安装菜单发生变化。
+
 - README任务概览默认排除“Things Mac 概览”和“了解 Things for iPhone”的所有同名项目；筛选必须同时覆盖统计、未完成及最近完成，详细备份保留。同名领域或独立任务不按标题误删。
 
 - AppKit 生命周期烟测必须使用 NSApplication.run 接收启动通知；仅 finishLaunching 不保证 delegate 回调。未激活应用显示窗口可能没有 didBecomeKey 通知；Dock 可见性依据窗口更新后的实际状态，关闭通知中排除即将关闭的窗口。

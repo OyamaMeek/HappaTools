@@ -1,5 +1,10 @@
 # HappaTools Implementation Plan
 
+## 2026-10-16 安装 pull 更新
+
+- 用户反馈 Finder 菜单没有 pull；核对 /Applications 安装版与已验证 Release 产物，备份并校验现有应用后更新。
+- 正常退出旧应用、重新注册并重启嵌套 Finder 扩展；校验安装签名、二进制一致性、扩展注册和运行路径。记录实际验证范围，不截图、不对用户当前仓库执行 pull。
+
 ## 2026-10-16 Finder pull
 
 - 在 Git 菜单的 iTerm2 下方增加 `pull`，使用独立 Finder 请求，遵守 Git 开关和忙碌状态；无路径时选择目录。

@@ -1,5 +1,7 @@
 # 开发环境
 
+- 2026-10-16 pull 安装：仅主代理，复用 ditto ZIP 备份、codesign、cmp、pluginkit 与进程路径核验；更新 /Applications 安装版，不截图，不执行用户仓库 pull。
+
 - 2026-10-16 Finder pull：仅主代理，Ponytail full、TDD 和完成前验证；复用 Swift/AppKit、GitExecutor、SQLite 日志、仓库锁和本地 bare 远端，无新增依赖；产物位于 .build，不安装、不截图。
 
 - 2026-10-11 排除某天任务：仅主代理，采用 Ponytail full；复用 Swift、SQLite、Git 同步和真实样本，无新依赖。不安装、不触发个人仓库同步、不截图。

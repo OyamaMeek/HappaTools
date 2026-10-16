@@ -1,5 +1,11 @@
 # 当前进度
 
+## 2026-10-16 安装 pull 更新
+
+- [x] 用户截图仍为旧菜单；安装版主程序哈希与包含 pull 的 Release 产物不同。
+- [x] 旧版备份 .build/HappaTools-before-pull-20261016.zip 完整校验通过；已更新安装，签名、主程序/framework/两扩展一致性和菜单32种状态通过。Git扩展只注册 /Applications 路径，主应用PID9885、扩展PID9887已运行；不截图、不执行用户仓库pull。
+- [ ] 记录、提交并普通推送。不截图、不对当前个人仓库执行 pull。
+
 ## 2026-10-16 Finder pull
 
 - [x] 读取菜单、URL、主应用分发、后台处理、Git 工作流、日志及测试调用；未跟踪的 AGENTS.md、Things3-push/、things.py/ 保持原状。

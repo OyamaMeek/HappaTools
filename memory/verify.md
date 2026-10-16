@@ -1,5 +1,11 @@
 # 验证标准
 
+## 2026-10-16 安装 pull 更新
+
+- 旧安装版 ZIP 完整性验证；新安装版 codesign 完整性、主程序/共享 framework/两个扩展与 Release 产物一致。
+- 插件注册及运行进程来自 /Applications；新版扩展包含 pull 动作，菜单32种状态通过。不截图、不执行用户仓库 pull。
+- 结果：ZIP 完整校验、安装签名、主程序/framework/两个扩展 cmp、菜单32种状态均通过。唯一 Git 插件注册来自 /Applications，新主应用PID9885及扩展PID9887运行；安装扩展SHA-256为cb2aeb9a04a069181587bf1d4523323dfff2319458b788a520821c6a916f5d16。未截图、未执行用户仓库pull，沿用临时签名。
+
 ## 2026-10-16 Finder pull
 
 - 菜单顺序提交、README、iTerm2、pull；独立 README 菜单无 pull；Git 开关、忙碌、路径缺失和 URL 往返正确。
