@@ -5,7 +5,7 @@
 - [x] 读取菜单、URL、主应用分发、后台处理、Git 工作流、日志及测试调用；未跟踪的 AGENTS.md、Things3-push/、things.py/ 保持原状。
 - [x] URL 请求回归先失败；菜单和 Git 工作流测试先报告缺少 pull 接口。已接通菜单、URL、后台 rebase、成功/失败日志及历史筛选。
 - [x] 42/42 共享测试、菜单32种状态、Release构建/临时签名及diff检查通过。应用烟测在既有README步骤超时，采样确认阻塞于 App Group 数据库的 guarded_open_np；未进入pull验证，未声称应用烟测通过，已恢复测试遗留忙碌标记。不安装、不截图。
-- [ ] 提交并普通推送。
+- [x] 功能提交 `c36f725 feat: add Finder pull with rebase from origin main` 已普通推送至 origin/main。
 
 ## 2026-10-11 排除某天任务
 
