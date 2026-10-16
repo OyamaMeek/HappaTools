@@ -425,3 +425,25 @@
 - **Git 提交**：`4c081a7 fix: exclude Someday tasks from Things3 backups`，已普通推送至 `origin/main`。
 
 ---
+
+## [2026-10-16 17:33] Finder 菜单增加 pull
+
+- **需求/问题描述**：
+  > 在现有 Git 菜单下方增加名为 pull 的按钮，执行 git pull --rebase origin main。
+
+- **实际实现的功能与改动**：
+  - [菜单与执行]：在 iTerm2 下方增加 pull，复用 URL 请求、后台执行、仓库锁及结果提示；固定执行 `git pull --rebase origin main`，支持目录选择、Git 开关和忙碌禁用。
+  - [日志]：记录拉取成功和失败输出，历史支持 Git 拉取类型筛选。保留未提交改动与 rebase 冲突现场，不自动推送。
+  - [测试/验证]：URL 回归先失败，菜单/工作流先报告缺少接口；42/42共享测试、菜单32种状态、Release构建及临时签名、diff检查通过。真实本地远端验证非main分支、无上游、rebase、本地提交保留、未提交改动、冲突和仓库锁。
+  - [未完成验证]：应用烟测在既有README步骤超时，采样确认阻塞于 App Group 日志数据库的 guarded_open_np，未进入pull检查；已恢复测试遗留忙碌标记。未安装、未截图，构建保留既有 AppIntents/扩展版本号警告。
+
+- **涉及文件**：
+  - `FinderSyncExtension/FinderSync.swift`、`FinderSyncExtension/MenuBuilder.swift`
+  - `Shared/Configuration/FinderRequest.swift`、`Shared/Git/GitWorkflow.swift`
+  - `HappaTools/App/AppModel.swift`、`HappaTools/App/GitOperationHandler.swift`、`HappaTools/Views/HistoryView.swift`
+  - `Tests/MenuSmoke/main.swift`、`Tests/FinderOperationSmoke/main.swift`、`Tests/HappaToolsSharedTests/FinderRequestTests.swift`、`Tests/HappaToolsSharedTests/GitWorkflowTests.swift`
+  - `README.md`、`memory/agents.md`、`memory/plan.md`、`memory/progress.md`、`memory/verify.md`、`docs/CHANGELOG.md`
+
+- **Git 提交**：待提交。
+
+---

@@ -1,5 +1,11 @@
 # HappaTools Implementation Plan
 
+## 2026-10-16 Finder pull
+
+- 在 Git 菜单的 iTerm2 下方增加 `pull`，使用独立 Finder 请求，遵守 Git 开关和忙碌状态；无路径时选择目录。
+- 主应用复用后台 GitOperationHandler、GitExecutor、仓库锁和日志，执行固定 `git pull --rebase origin main`；不要求上游配置，不自动暂存或处理冲突。
+- 覆盖菜单、URL、真实本地远端 rebase/失败及应用入口，运行共享测试、菜单/应用烟测和 Release 构建；记录后提交并普通推送。不安装、不截图、不操作个人备份仓库。
+
 ## 2026-10-11 排除某天任务
 
 - 用户确认所有“某天”任务均不备份；按 Things 的活动状态、start=2 且无开始日期识别，覆盖独立任务、项目、领域和标题分组内任务。有日期的 Upcoming 与结束任务保留。

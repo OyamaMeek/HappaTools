@@ -164,7 +164,7 @@ final class AppModel: NSObject, ObservableObject, NSApplicationDelegate {
                 self.presentFinderResult(error.localizedDescription, failed: true)
                 return
             }
-            guard request.operation == .iterm || (request.operation == .git ? self.settings.showGitButton : self.settings.showReadmeButton) else {
+            guard request.operation == .iterm || (request.operation == .readme ? self.settings.showReadmeButton : self.settings.showGitButton) else {
                 self.presentFinderResult("此操作已在设置中关闭。", failed: true)
                 return
             }
@@ -197,12 +197,12 @@ final class AppModel: NSObject, ObservableObject, NSApplicationDelegate {
             }
             self.operationRunning = true
             self.settings.operationInProgress = true
-            self.operationHandler.perform(at: directory, message: message) { result in
+            self.operationHandler.perform(at: directory, operation: request.operation, message: message) { result in
                 self.refresh()
                 switch result {
                 case .success(let file):
                     if file == nil {
-                        self.presentFinderResult("Git 提交与推送已完成。")
+                        self.presentFinderResult(request.operation == .pull ? "Git pull --rebase origin main 已完成。" : "Git 提交与推送已完成。")
                     } else {
                         self.returnToFinder()
                     }

@@ -2,7 +2,8 @@ import AppKit
 
 enum MenuBuilder {
     static func make(directory: URL?, isGit: Bool, gitEnabled: Bool, readmeEnabled: Bool, busy: Bool,
-                     target: AnyObject, gitAction: Selector, readmeAction: Selector, itermAction: Selector) -> NSMenu {
+                     target: AnyObject, gitAction: Selector, readmeAction: Selector, itermAction: Selector,
+                     pullAction: Selector) -> NSMenu {
         let menu = NSMenu()
         menu.autoenablesItems = false
         let notice = NSMenuItem(title: directory?.path ?? "Finder 未提供当前路径", action: nil, keyEquivalent: "")
@@ -27,6 +28,13 @@ enum MenuBuilder {
             item.target = target
             item.isEnabled = !busy
             menu.addItem(item)
+            var title = directory == nil ? "选择文件夹并 pull…" : "pull"
+            if !gitEnabled { title += "（已关闭）" }
+            else if busy { title += "（正在处理…）" }
+            let pull = NSMenuItem(title: title, action: pullAction, keyEquivalent: "")
+            pull.target = target
+            pull.isEnabled = gitEnabled && !busy
+            menu.addItem(pull)
         }
         return menu
     }

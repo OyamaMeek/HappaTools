@@ -6,6 +6,87 @@ import XCTest
 final class GitWorkflowTests: XCTestCase {
     private let gitURL = URL(fileURLWithPath: "/usr/bin/git")
 
+    func testPullRebasesCurrentBranchOntoOriginMainWithoutUpstream() throws {
+        let setup = try TestSupport.configuredRepository()
+        let peer = setup.root.deletingLastPathComponent().appendingPathComponent("peer")
+        try TestSupport.git(["clone", "--branch", "main", setup.remote.path, peer.path], at: setup.root)
+        try TestSupport.git(["config", "user.name", "HappaTools Tests"], at: peer)
+        try TestSupport.git(["config", "user.email", "tests@example.com"], at: peer)
+        try Data("remote update\n".utf8).write(to: peer.appendingPathComponent("tracked.txt"))
+        try TestSupport.git(["add", "-A"], at: peer)
+        try TestSupport.git(["commit", "-m", "remote update"], at: peer)
+        try TestSupport.git(["push", "origin", "main"], at: peer)
+        let remoteHead = try TestSupport.git(["rev-parse", "refs/heads/main"], at: setup.remote)
+        try TestSupport.git(["checkout", "--no-track", "-b", "topic"], at: setup.root)
+        try Data("local\n".utf8).write(to: setup.root.appendingPathComponent("local.txt"))
+        try TestSupport.git(["add", "-A"], at: setup.root)
+        try TestSupport.git(["commit", "-m", "local update"], at: setup.root)
+        let nested = setup.root.appendingPathComponent("nested")
+        try FileManager.default.createDirectory(at: nested, withIntermediateDirectories: true)
+        let database = try DatabaseManager(url: peer.deletingLastPathComponent().appendingPathComponent("logs.sqlite"))
+
+        try GitWorkflow(executor: GitExecutor(executableURL: gitURL), database: database).pull(at: nested)
+
+        XCTAssertEqual(try TestSupport.git(["branch", "--show-current"], at: setup.root), "topic\n")
+        XCTAssertEqual(try TestSupport.git(["rev-parse", "HEAD^"], at: setup.root), remoteHead)
+        XCTAssertEqual(try TestSupport.git(["log", "-1", "--format=%s"], at: setup.root), "local update\n")
+        XCTAssertEqual(try String(contentsOf: setup.root.appendingPathComponent("tracked.txt"), encoding: .utf8), "remote update\n")
+        XCTAssertEqual(try String(contentsOf: setup.root.appendingPathComponent("local.txt"), encoding: .utf8), "local\n")
+        XCTAssertEqual(try TestSupport.git(["rev-parse", "refs/heads/main"], at: setup.remote), remoteHead)
+        XCTAssertEqual(try database.records(operationType: "git_pull").first?.status, "success")
+    }
+
+    func testPullPreservesDirtyWorktreeAndLogsGitFailure() throws {
+        let setup = try TestSupport.configuredRepository()
+        let file = setup.root.appendingPathComponent("tracked.txt")
+        try Data("uncommitted\n".utf8).write(to: file)
+        let before = try TestSupport.git(["rev-parse", "HEAD"], at: setup.root)
+        let database = try DatabaseManager(url: setup.root.deletingLastPathComponent().appendingPathComponent("logs.sqlite"))
+
+        XCTAssertThrowsError(try GitWorkflow(executor: GitExecutor(executableURL: gitURL), database: database).pull(at: setup.root)) { error in
+            guard case let GitError.commandFailed(arguments, _, _, _) = error else {
+                return XCTFail("Unexpected error: \(error)")
+            }
+            XCTAssertEqual(arguments, ["pull", "--rebase", "origin", "main"])
+        }
+        XCTAssertEqual(try String(contentsOf: file, encoding: .utf8), "uncommitted\n")
+        XCTAssertEqual(try TestSupport.git(["rev-parse", "HEAD"], at: setup.root), before)
+        let record = try XCTUnwrap(database.records(operationType: "git_pull").first)
+        XCTAssertEqual(record.status, "failure")
+        XCTAssertFalse(record.stderr.isEmpty)
+    }
+
+    func testPullLeavesConflictForUserToResolve() throws {
+        let setup = try TestSupport.configuredRepository()
+        try Data("local change\n".utf8).write(to: setup.root.appendingPathComponent("tracked.txt"))
+        try TestSupport.git(["commit", "-am", "local change"], at: setup.root)
+        let localHead = try TestSupport.git(["rev-parse", "HEAD"], at: setup.root)
+        try TestSupport.git(["checkout", "-b", "remote-update", "origin/main"], at: setup.root)
+        try Data("remote change\n".utf8).write(to: setup.root.appendingPathComponent("tracked.txt"))
+        try TestSupport.git(["commit", "-am", "remote change"], at: setup.root)
+        try TestSupport.git(["push", "origin", "HEAD:main"], at: setup.root)
+        try TestSupport.git(["checkout", "main"], at: setup.root)
+        let database = try DatabaseManager(url: setup.root.deletingLastPathComponent().appendingPathComponent("logs.sqlite"))
+
+        XCTAssertThrowsError(try GitWorkflow(executor: GitExecutor(executableURL: gitURL), database: database).pull(at: setup.root))
+
+        XCTAssertFalse(try TestSupport.git(["diff", "--name-only", "--diff-filter=U"], at: setup.root).isEmpty)
+        XCTAssertEqual(try TestSupport.git(["rev-parse", "ORIG_HEAD"], at: setup.root), localHead)
+        XCTAssertEqual(try TestSupport.git(["show", "ORIG_HEAD:tracked.txt"], at: setup.root), "local change\n")
+        XCTAssertEqual(try database.records(operationType: "git_pull").first?.status, "failure")
+    }
+
+    func testPullRespectsRepositoryLock() throws {
+        let setup = try TestSupport.configuredRepository()
+        let database = try DatabaseManager(url: setup.root.deletingLastPathComponent().appendingPathComponent("logs.sqlite"))
+        let lock = try RepositoryLock(path: setup.root.path)
+        defer { withExtendedLifetime(lock) {} }
+        XCTAssertThrowsError(try GitWorkflow(executor: GitExecutor(executableURL: gitURL), database: database).pull(at: setup.root)) { error in
+            guard case GitError.repositoryBusy = error else { return XCTFail("Unexpected error: \(error)") }
+        }
+        XCTAssertEqual(try database.records(operationType: "git_pull").first?.status, "failure")
+    }
+
     func testValidatorDistinguishesNonRepositoryAndMissingUpstream() throws {
         let directory = try TestSupport.temporaryDirectory()
         let gitBoundary = directory.appendingPathComponent(".git")

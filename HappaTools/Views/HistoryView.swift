@@ -22,6 +22,7 @@ struct HistoryView: View {
                     Text("全部").tag("")
                     Text("提交").tag("git_commit")
                     Text("推送").tag("git_push")
+                    Text("拉取").tag("git_pull")
                     Text("README").tag("create_readme")
                     Text("Things3").tag("things_sync")
                 }
@@ -81,6 +82,7 @@ struct HistoryView: View {
         switch type {
         case "git_commit": return "Git 提交"
         case "git_push": return "Git 推送"
+        case "git_pull": return "Git 拉取"
         case "things_sync": return "Things3 同步"
         default: return "创建 README"
         }

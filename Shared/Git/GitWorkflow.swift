@@ -10,6 +10,25 @@ public final class GitWorkflow {
         self.database = database
     }
 
+    public func pull(at directory: URL) throws {
+        var root = directory
+        do {
+            guard try GitValidator(executor: executor).isGitRepository(at: directory) else { throw GitError.notRepository }
+            let rootOutput = try executor.run(["rev-parse", "--show-toplevel"], at: directory).stdout
+            root = URL(fileURLWithPath: rootOutput.hasSuffix("\n") ? String(rootOutput.dropLast()) : rootOutput, isDirectory: true)
+            let repositoryLock = try RepositoryLock(path: root.path)
+            defer { withExtendedLifetime(repositoryLock) {} }
+            let result = try executor.run(["pull", "--rebase", "origin", "main"], at: root)
+            try database.insertLog(OperationRecord(
+                operationType: "git_pull", targetPath: root.path,
+                stdout: result.stdout, stderr: result.stderr, status: "success"
+            ))
+        } catch {
+            try log(type: "git_pull", path: root.path, message: nil, error: error)
+            throw error
+        }
+    }
+
     public func commitAndPush(at directory: URL, message: String, preferredBranch: String) throws {
         let trimmedMessage = message.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedMessage.isEmpty else {
@@ -132,7 +151,7 @@ public final class GitWorkflow {
         }
     }
 
-    private func log(type: String, path: String, message: String, error: Error) throws {
+    private func log(type: String, path: String, message: String?, error: Error) throws {
         let output = output(from: error)
         try database.insertLog(OperationRecord(
             operationType: type,

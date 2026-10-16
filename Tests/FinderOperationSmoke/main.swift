@@ -80,6 +80,8 @@ func check() throws {
                                         (.git, true, directory),
                                         (.readme, true, directory),
                                         (.readme, false, directory.appendingPathComponent("missing")),
+                                        (.pull, true, directory),
+                                        (.pull, false, directory.appendingPathComponent("missing")),
                                         (.iterm, false, directory.appendingPathComponent("missing"))] {
         app.unhide(nil)
         window.makeKeyAndOrderFront(nil)
@@ -89,7 +91,7 @@ func check() throws {
         let response = Timer(timeInterval: 0.1, repeats: true) { _ in
             guard app.modalWindow != nil else { return }
             alertCount += 1
-            if target == directory && (operation == .readme || alertCount == 2) {
+            if target == directory && (operation == .readme || operation == .pull || alertCount == 2) {
                 assert(model.operationRunning && model.settings.operationInProgress,
                        "结果弹窗关闭前必须阻止重复操作")
             }
@@ -112,7 +114,43 @@ func check() throws {
             assert(content == "保留已有内容", "重复创建不得覆盖已有 README")
         }
     }
-    print("Finder 操作检查通过：窗口显示/关闭/重开、多窗口与最小化 Dock 行为、关闭后后台运行、README 零弹窗及内容保护、Git 取消/失败、无效目录与结果防重入。")
+    let git = GitExecutor(executableURL: URL(fileURLWithPath: "/usr/bin/git"))
+    let remote = directory.appendingPathComponent(".git/remote.git")
+    _ = try git.run(["init", "--bare", remote.path], at: directory)
+    _ = try git.run(["branch", "-M", "main"], at: directory)
+    _ = try git.run(["config", "user.name", "HappaTools Smoke"], at: directory)
+    _ = try git.run(["config", "user.email", "tests@example.com"], at: directory)
+    _ = try git.run(["add", "README.md"], at: directory)
+    _ = try git.run(["commit", "-m", "initial"], at: directory)
+    _ = try git.run(["remote", "add", "origin", remote.path], at: directory)
+    _ = try git.run(["push", "origin", "main"], at: directory)
+    _ = try git.run(["checkout", "-b", "update"], at: directory)
+    try Data("pulled from origin/main".utf8).write(to: readme)
+    _ = try git.run(["commit", "-am", "remote update"], at: directory)
+    _ = try git.run(["push", "origin", "HEAD:main"], at: directory)
+    _ = try git.run(["checkout", "main"], at: directory)
+    let previousReadmeEnabled = model.settings.showReadmeButton
+    model.settings.showReadmeButton = false
+    defer { model.settings.showReadmeButton = previousReadmeEnabled }
+    app.unhide(nil)
+    window.makeKeyAndOrderFront(nil)
+    var pullAlertCount = 0
+    let pullResponse = Timer(timeInterval: 0.1, repeats: true) { _ in
+        guard app.modalWindow != nil else { return }
+        pullAlertCount += 1
+        assert(model.operationRunning && model.settings.operationInProgress)
+        app.stopModal(withCode: .alertFirstButtonReturn)
+    }
+    RunLoop.main.add(pullResponse, forMode: .modalPanel)
+    model.handle(FinderRequest(operation: .pull, directory: directory).url)
+    let pullDeadline = Date().addingTimeInterval(10)
+    while window.isVisible && Date() < pullDeadline { RunLoop.main.run(until: Date().addingTimeInterval(0.05)) }
+    pullResponse.invalidate()
+    assert(pullAlertCount == 1 && !window.isVisible, "pull 必须直接执行，只显示结果提示")
+    assert(!model.operationRunning && !model.settings.operationInProgress)
+    let pulledContent = try String(contentsOf: readme, encoding: .utf8)
+    assert(pulledContent == "pulled from origin/main", "pull 必须实际更新当前仓库")
+    print("Finder 操作检查通过：Dock 生命周期、README 内容保护、Git 取消/失败、pull 真实拉取/失败/无效路径及结果防重入。")
 }
 
 Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { _ in

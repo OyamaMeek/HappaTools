@@ -5,6 +5,7 @@ public struct FinderRequest {
         case git
         case readme
         case iterm
+        case pull
     }
 
     public let operation: Operation

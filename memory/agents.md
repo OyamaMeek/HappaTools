@@ -1,5 +1,7 @@
 # 开发环境
 
+- 2026-10-16 Finder pull：仅主代理，Ponytail full、TDD 和完成前验证；复用 Swift/AppKit、GitExecutor、SQLite 日志、仓库锁和本地 bare 远端，无新增依赖；产物位于 .build，不安装、不截图。
+
 - 2026-10-11 排除某天任务：仅主代理，采用 Ponytail full；复用 Swift、SQLite、Git 同步和真实样本，无新依赖。不安装、不触发个人仓库同步、不截图。
 
 - 2026-10-01 教程项目屏蔽：仅主代理；复用README overview、SQLite样本、Swift Set及既有应用/Git同步，无新依赖；沿用本会话明确批准的安装和Things3-sync上传授权，不截图。

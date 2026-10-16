@@ -41,7 +41,7 @@ final class FinderSync: FIFinderSync {
     }
 
     override var toolbarItemName: String { isGit ? "Git" : "README" }
-    override var toolbarItemToolTip: String { isGit ? "提交并推送、创建 README.md，或打开 iTerm2" : "创建 README.md" }
+    override var toolbarItemToolTip: String { isGit ? "提交并推送、创建 README.md、打开 iTerm2 或 pull" : "创建 README.md" }
     override var toolbarItemImage: NSImage {
         let image = NSImage(systemSymbolName: isGit ? "arrow.triangle.branch" : "doc.badge.plus", accessibilityDescription: toolbarItemName) ?? NSImage(named: NSImage.actionTemplateName)!
         image.isTemplate = true
@@ -55,7 +55,7 @@ final class FinderSync: FIFinderSync {
                                 gitEnabled: settings.showGitButton, readmeEnabled: settings.showReadmeButton,
                                 busy: operationIsRunning || isOpening, target: self,
                                 gitAction: #selector(runGitOperation(_:)), readmeAction: #selector(runReadmeOperation(_:)),
-                                itermAction: #selector(runITermOperation(_:)))
+                                itermAction: #selector(runITermOperation(_:)), pullAction: #selector(runPullOperation(_:)))
     }
 
     private func currentDirectory() -> URL? {
@@ -69,10 +69,12 @@ final class FinderSync: FIFinderSync {
 
     @objc private func runITermOperation(_ sender: NSMenuItem) { runOperation(.iterm) }
 
+    @objc private func runPullOperation(_ sender: NSMenuItem) { runOperation(.pull) }
+
     private func runOperation(_ operation: FinderRequest.Operation) {
         let settings = UserSettings()
         guard !isOpening, !operationIsRunning else { return }
-        guard operation == .iterm || (operation == .git ? settings.showGitButton : settings.showReadmeButton) else { return }
+        guard operation == .iterm || (operation == .readme ? settings.showReadmeButton : settings.showGitButton) else { return }
         let request = FinderRequest(operation: operation, directory: currentDirectory())
         isOpening = true
         NSWorkspace.shared.open([request.url], withApplicationAt: containingAppURL, configuration: NSWorkspace.OpenConfiguration()) { [weak self] _, error in
