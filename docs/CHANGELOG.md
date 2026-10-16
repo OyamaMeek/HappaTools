@@ -462,6 +462,6 @@
   - `memory/agents.md`、`memory/plan.md`、`memory/progress.md`、`memory/verify.md`、`memory/gotchas.md`、`docs/CHANGELOG.md`
   - 本机 `/Applications/HappaTools.app`；备份和构建产物位于忽略的 `.build/`。
 
-- **Git 提交**：安装记录待提交。
+- **Git 提交**：`201735a docs: record installed Finder pull update`，已普通推送至 `origin/main`。
 
 ---
